@@ -30,13 +30,11 @@
         </div>
       </div>
     </nav>
-    <router-view id="content"/>
+    <router-view/>
   </div>
 </template>
 
 <style lang="scss">
-@import "bulma/sass/utilities/_all.sass";
-@import 'bulma/sass/components/navbar.sass';
 
 .navbar__underline-remove {
   text-decoration: none;

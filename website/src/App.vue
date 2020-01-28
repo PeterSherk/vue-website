@@ -31,6 +31,15 @@
       </div>
     </nav>
     <router-view/>
+    <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        Created by Peter Sherk using <a href="https://bulma.io">Bulma</a>,
+        <a href="https://vuejs.org/">Vue</a> and
+        <a href="https://aws.amazon.com/">AWS</a>. &copy; 2020
+      </p>
+    </div>
+</footer>
   </div>
 </template>
 

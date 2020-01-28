@@ -4,7 +4,7 @@
     <div class="hero-body">
         <div class="container">
             <div class="columns">
-                <div class="column">
+                <div class="column is-5 is-offset-1">
                     <h1 class="title">
                         Welcome
                     </h1>
@@ -12,17 +12,17 @@
                         This website showcases my many passions, from coding to cooking to music.
                     </h2>
                 </div>
-                <div class="column">
+                <div class="column is-4 is-narrow-tablet is-narrow-mobile">
                     <div class="tile is-ancestor">
-                        <div class="tile is-6 is-vertical is-parent">
-                            <div class="tile is-child box">
-                                <IconTile tileTitle="Coding" icon="fa-laptop-code"/>
+                        <div class="tile is-vertical is-parent">
+                            <div id="coding" class="tile is-child box">
+                                <IconTile tileTitle="Coding" icon="fa-laptop-code" route="/coding"/>
                             </div>
                             <div class="tile is-child box">
-                                <IconTile tileTitle="Cooking" icon="fa-cookie-bite"/>
+                                <IconTile tileTitle="Cooking" icon="fa-cookie-bite" route="/cooking"/>
                             </div>
                             <div class="tile is-child box">
-                                <IconTile tileTitle="Music" icon="fa-compact-disc"/>
+                                <IconTile tileTitle="Music" icon="fa-compact-disc" route="/music"/>
                             </div>
                         </div>
                     </div>
@@ -46,10 +46,14 @@ export default {
 </script>
 
 <style lang="scss">
-    .welcome__label-buffer {
-        margin-left: 1rem;
+    .banner__box-hand {
+        cursor: pointer;
     }
-    .welcome-larger {
-        font-size: 2rem;
+    .box {
+        transition: all .2s ease-in-out;
+    }
+    .box:hover{
+        cursor: pointer;
+        transform: scale(1.1);
     }
 </style>

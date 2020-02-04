@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
+        <a class="navbar-item">
           <router-link to="/"><img src="favicon.ico" width="28" height="28" alt="Logo"></router-link>
         </a>
 
@@ -21,9 +21,6 @@
           <router-link class="navbar-item navbar__underline-remove" to="/about">
             About
           </router-link>
-          <a class="navbar-item navbar__underline-remove" href="https://github.com/PeterSherk" target="_blank">
-            GitHub
-          </a>
           <a class="navbar-item navbar__underline-remove" href="docs/resume_peter_sherk.pdf" target="_blank">
             Resume
           </a>
@@ -32,14 +29,14 @@
     </nav>
     <router-view/>
     <footer class="footer">
-    <div class="content has-text-centered">
-      <p>
-        Created by Peter Sherk using <a href="https://bulma.io">Bulma</a>,
-        <a href="https://vuejs.org/">Vue</a> and
-        <a href="https://aws.amazon.com/">AWS</a>. &copy; 2020
-      </p>
-    </div>
-</footer>
+      <div class="content has-text-centered">
+        <p>
+          Created by Peter Sherk using <a href="https://bulma.io">Bulma</a>,
+          <a href="https://vuejs.org/">Vue</a> and
+          <a href="https://aws.amazon.com/">AWS</a>. &copy; 2020
+        </p>
+      </div>
+    </footer>
   </div>
 </template>
 

@@ -1,8 +1,19 @@
 <template>
-  <div class="coding">
-    <h1>Hi Coding</h1>
+  <div id="coding">
+    <WorkInProgress/>
   </div>
 </template>
+
+<script lang="ts">
+import WorkInProgress from '@/views/WorkInProgress.vue'
+
+export default {
+  name: 'coding',
+  components: {
+    WorkInProgress
+  }
+}
+</script>
 
 <style lang="scss">
 </style>

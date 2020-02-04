@@ -1,8 +1,16 @@
 <template>
-  <div class="music">
-    <h1>Hi Music</h1>
+  <div id="music">
+    <WorkInProgress/>
   </div>
 </template>
 
-<style lang="scss">
-</style>
+<script lang="ts">
+import WorkInProgress from '@/views/WorkInProgress.vue'
+
+export default {
+  name: 'music',
+  components: {
+    WorkInProgress
+  }
+}
+</script>

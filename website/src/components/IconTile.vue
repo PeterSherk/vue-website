@@ -8,6 +8,11 @@
                 <h1 class="title">{{tileTitle}}</h1>
             </div>
         </div>
+        <div class="level-right">
+            <div class="level-item">
+                <font-awesome-icon :icon="['fas', 'chevron-right']" />
+            </div>
+        </div>
     </div>
 </template>
 

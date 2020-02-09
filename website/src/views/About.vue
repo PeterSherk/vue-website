@@ -57,6 +57,17 @@
           <span class="tag is-info">HTML/CSS</span>
           <span class="tag is-info">Docker</span>
           <span class="tag is-info">Java</span>
+          <span class="tag is-info">Git</span>
+          <span class="tag is-info">Node</span>
+          <span class="tag is-info">Relational DB's</span>
+          <span class="tag is-info">Bash</span>
+          <span class="tag is-info">Ethereum</span>
+          <span class="tag is-info">Cucumber</span>
+          <span class="tag is-info">Protractor</span>
+          <span class="tag is-info">Flask</span>
+          <span class="tag is-info">SQLAlchemy</span>
+          <span class="tag is-info">JPA</span>
+          <span class="tag is-info">Python</span>
         </div>
       </div>
       <div class="column is-offset-1">
@@ -64,6 +75,8 @@
         <div class="tags">
           <span class="tag is-success">Collaborator</span>
           <span class="tag is-success">Problem Solver</span>
+          <span class="tag is-success">Leader</span>
+          <span class="tag is-success">Planner</span>
         </div>
       </div>
     </div>

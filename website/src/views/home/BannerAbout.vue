@@ -5,7 +5,7 @@
       <div class="container">
         <div class="level">
           <div class="level-item has-text-centered">
-              <img class="bannerabout__head" src="../../../public/img/positano.jpeg">
+              <img class="bannerabout__head" src="../../../public/img/positano.jpeg" alt="Picture of Peter">
           </div>
           <div class="level-item has-text-centered">
             <div class="content">

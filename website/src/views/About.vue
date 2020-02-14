@@ -1,8 +1,8 @@
 <template>
-  <section id="about" class="about__full-height section">
+  <section id="about" class="screen__full-height section">
     <div class="columns is-centered">
       <div id="about__pic" class="column is-4-desktop is-5-tablet">
-        <figure class="images about__head"></figure>
+        <figure class="images about__head" alt="Picture of Peter"></figure>
       </div>
       <div class="column is-6">
         <h1 class="title">Peter Sherk</h1>
@@ -84,9 +84,6 @@
 </template>
 
 <style lang="scss">
-  .about__full-height {
-    min-height: calc(100vh - 3.25rem);
-  }
   .about__head {
     width: 240px;
     height: 380px;

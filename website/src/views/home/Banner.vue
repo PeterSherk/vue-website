@@ -16,13 +16,13 @@
                         <div class="column is-5 is-narrow-tablet is-narrow-mobile">
                             <div class="tile is-ancestor">
                                 <div class="tile is-vertical is-parent">
-                                    <router-link to="/coding" tag="div" class="tile is-child box banner__box">
+                                    <router-link to="/coding" tag="div" class="tile is-child box grow__box">
                                         <IconTile tileTitle="Coding" icon="laptop-code"/>
                                     </router-link>
-                                    <router-link to="/cooking" tag="div" class="tile is-child box banner__box">
+                                    <router-link to="/cooking" tag="div" class="tile is-child box grow__box">
                                         <IconTile tileTitle="Cooking" icon="cookie-bite"/>
                                     </router-link>
-                                    <router-link to="/music" tag="div" class="tile is-child box banner__box">
+                                    <router-link to="/music" tag="div" class="tile is-child box grow__box">
                                         <IconTile tileTitle="Music" icon="compact-disc"/>
                                     </router-link>
                                 </div>
@@ -47,11 +47,4 @@ export default {
 </script>
 
 <style lang="scss">
-    .banner__box {
-        transition: all .2s ease-in-out;
-    }
-    .banner__box:hover{
-        cursor: pointer;
-        transform: scale(1.1);
-    }
 </style>

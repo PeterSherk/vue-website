@@ -8,13 +8,14 @@ import {
   faLaptopCode, faCookieBite, faCompactDisc, faToolbox,
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
+import { faEnvelope, faCalendarAlt } from '@fortawesome/free-regular-svg-icons'
 import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import '@/assets/index.scss'
 
 library.add(
   faLaptopCode, faCookieBite, faCompactDisc, faToolbox, faChevronRight,
-  faEnvelope,
+  faEnvelope, faCalendarAlt,
   faLinkedin, faGithub
 )
 

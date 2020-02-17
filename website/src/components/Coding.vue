@@ -8,7 +8,7 @@
               <h1 class="title">Projects</h1>
             </div>
             <div class="column is-one-third" v-for="project in projects" :key="project.id">
-              <router-link tag="div" :to="{ name: 'project', params: { projectId: project.id }}" class="card grow__box coding__box" v-on:click="print(project.id)">
+              <router-link tag="div" :to="{ name: 'projects', params: { projectId: project.id }}" class="card grow__box coding__box" v-on:click="print(project.id)">
                 <div class="card-content">
                   <p class="title is-4">{{project.name}}</p>
                   <p class="title is-6">Company - {{project.company}}</p>
@@ -20,9 +20,6 @@
         </div>
         <div class="column is-1"></div>
       </div>
-      <!-- <div>
-        <button class="button" v-on:click="addElement()">Add Project</button>
-      </div> -->
     </section>
   </div>
 </template>
@@ -43,15 +40,6 @@ export default class Coding extends Vue {
   mounted () {
     this.projects = this.projectService.getProjects()
   };
-
-  addElement () {
-    this.projects.push({
-      id: Math.random(),
-      name: `test${Math.random()}`,
-      company: 'Test',
-      year: 2016
-    })
-  }
 }
 </script>
 

@@ -5,7 +5,7 @@
       <div class="container">
         <div class="level">
           <div class="level-item has-text-centered">
-              <img class="bannerabout__head" src="../../../public/img/positano.jpeg" alt="Picture of Peter">
+              <img class="bannerabout__head" :src="`${publicPath}img/positano.jpeg`" alt="Picture of Peter">
           </div>
           <div class="level-item has-text-centered">
             <div class="content">
@@ -46,6 +46,11 @@ export default {
   methods: {
     openLink: (link: string, newTab: boolean) => {
       window.open(link, newTab ? '_blank' : '_parent')
+    }
+  },
+  data () {
+    return {
+      publicPath: process.env.BASE_URL
     }
   }
 }

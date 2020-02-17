@@ -3,11 +3,12 @@ export default interface Project {
   name: string,
   company: string,
   year: number,
-  data?: ProjectData
+  overview: string,
+  content?: ProjectContent[]
 }
 
-export interface ProjectData {
-  overview: string,
-  description: string[],
-  images?: string[]
+export interface ProjectContent {
+  description: string,
+  title?: string,
+  image?: string
 }

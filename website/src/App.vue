@@ -3,7 +3,7 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item">
-          <router-link to="/"><img src="favicon.ico" width="28" height="28" alt="Logo"></router-link>
+          <router-link to="/"><img src="/favicon.ico" width="28" height="28" alt="Logo"></router-link>
         </a>
 
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarDropDown">

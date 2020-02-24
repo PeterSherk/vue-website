@@ -30,7 +30,7 @@
       </div>
     </div>
     <div v-else>
-      <h1 class="title">Project "{{pathId}}" doesn't exist.</h1>
+      <h1 class="title has-text-centered">Project "{{pathId}}" doesn't exist.</h1>
     </div>
   </section>
 </template>

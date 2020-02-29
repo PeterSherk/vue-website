@@ -5,5 +5,7 @@ module.exports = {
   host: process.env.HOST,
   database: process.env.DATABASE,
   password: process.env.PASSWORD,
-  dbPort: process.env.DATABASE_PORT
+  dbPort: process.env.DATABASE_PORT,
+  jwtSecret: process.env.JWT_SECRET,
+  saltRounds: process.env.SALT_ROUNDS
 };

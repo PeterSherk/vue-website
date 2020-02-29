@@ -1,0 +1,11 @@
+.grow__box {
+  transition: all .2s ease-in-out;
+}
+.grow__box:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.screen__full-height {
+  min-height: calc(100vh - 3.25rem);
+}

@@ -1,12 +1,26 @@
 import express, { json } from 'express';
-// const cors = require('cors');
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpecs from './swagger/swagger';
+import cors from 'cors';
 import { sign, verify } from 'jsonwebtoken';
 import { compare, hash as _hash } from 'bcrypt';
 import { Pool } from 'pg';
 import { logger } from '../../configs/logger';
-import { user, host, database, password, dbPort, jwtSecret, saltRounds } from '../../configs/config';
+import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../../configs/config';
+
+// Set up Express server
 const app = express();
+// Enable JSON processing
 app.use(json());
+// Enable CORS policy as open for all
+app.use(cors())
+//Swagger endpoint for documentation
+var options = {
+  swaggerOptions: {
+    validatorUrl: null
+  }
+};
+app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, options));
 
 // Create DB connection pool
 const pool = new Pool({
@@ -17,8 +31,60 @@ const pool = new Pool({
   port: dbPort,
 });
 
+// Define tags for Swagger
+
+/**
+ * @swagger
+ * tags:
+ *   name: Projects
+ *   description: Endpoints to interact with personal and professional projects for my personal website.
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: Endpoints to interact with user's in my website. User's can add custom content and edit their own content.
+ */
+
+// Define auth types for Swagger
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BasicAuth:
+ *       type: http
+ *       scheme: basic
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 // API Endpoints
 
+/**
+ * @swagger
+ * path:
+ *  /projects:
+ *    get:
+ *      summary: Get a list of projects
+ *      tags: [Projects]
+ *      responses:
+ *        "200":
+ *          description: A list of projects
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Project'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
 app.get('/api/v1/projects', (req ,getRes)=> {
 
   pool.query('SELECT * FROM website.project', (err, qRes) => {
@@ -40,6 +106,27 @@ app.get('/api/v1/projects', (req ,getRes)=> {
   });
 });
 
+/**
+ * @swagger
+ * path:
+ *  /projects/overview:
+ *    get:
+ *      summary: Get a list of project overviews
+ *      tags: [Projects]
+ *      responses:
+ *        "200":
+ *          description: A list of projects overviews
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/ProjectOverview'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
 app.get('/api/v1/projects/overview', (req ,getRes)=> {
 
   pool.query('SELECT id, company, name, year FROM website.project', (err, qRes) => {
@@ -61,6 +148,43 @@ app.get('/api/v1/projects/overview', (req ,getRes)=> {
   });
 });
 
+/**
+ * @swagger
+ * path:
+ *  /users/{username}:
+ *    delete:
+ *      summary: Delete's a selected user, only if properly authorized.
+ *      tags: [Users]
+ *      security:
+ *        - BearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         description: The User you want to delete identified by username.
+ *         schema:
+ *           type: string
+ *           minLength: 1
+ *      responses:
+ *        "200":
+ *          description: User has been successfully
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/SuccessMessage'
+ *        "401":
+ *          description: User does not have proper authorization to delete user
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/UnauthorizedMessage'
+ *        "500":
+ *          description: Server error occurred.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
 app.delete('/api/v1/users/:username', (req, res) => {
   if (tokenInvalid(req) || !userValidForToken(req, req.params.username)){
     return res.status(401).send({
@@ -84,13 +208,58 @@ app.delete('/api/v1/users/:username', (req, res) => {
         level: 'info',
         message: `${req.method} request to ${req.url} successful.`
       });
-      return res.send({
-        message: `User ${un} deleted.`
+      const rowsDeleted = qRes.rowCount;
+      logger.log({
+        level: 'info',
+        message: `${rowsDeleted} records deleted from database.'`
       });
+      if (rowsDeleted != 0) {
+        return res.send({
+          message: `User ${un} deleted.`
+        });
+      } else {
+        return res.send({
+          message: `User doesn't exist.`
+        });
+      }
     }
   });
 });
 
+/**
+ * @swagger
+ * path:
+ *  /login:
+ *    post:
+ *      summary: Login to REST API and receive auth credentials.
+ *      tags: [Users]
+ *      security:
+ *        - BasicAuth: []
+ *      responses:
+ *        "200":
+ *          description: Successfully authenticated user and received token.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                properties:
+ *                  token:
+ *                    type: string
+ *                    description: JWT token for use in interaction with authorized endpoints
+ *                example:
+ *                  token: "jdkLleks92L"
+ *        "401":
+ *          description: User does not have proper authorization.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/UnauthorizedMessage'
+ *        "500":
+ *          description: Server error occurred.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
 app.post('/api/v1/login', (req, res) => {
   if (!authPresent(req, 'Basic')) {
     return res.status(401).send({
@@ -121,7 +290,7 @@ app.post('/api/v1/login', (req, res) => {
       });
     } else {
       const hashPass = qRes.rows[0].password
-      compare(plainPW, hashPass, function(hashErr, hashRes) {
+      compare(plainPW, hashPass, (hashErr, hashRes) => {
         if (hashErr || !hashRes) {
           logger.log({
             level: 'info',
@@ -146,9 +315,65 @@ app.post('/api/v1/login', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * path:
+ *  /register:
+ *    post:
+ *      summary: Endpoint to register a new user with the system.
+ *      tags: [Users]
+ *      security:
+ *        - BearerAuth: []
+ *      parameters:
+ *       - in: header
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: header
+ *         name: password
+ *         schema:
+ *           type: string
+ *         required: true
+ *      responses:
+ *        "200":
+ *          description: Successfully added user.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: Message with username that was successfully registered.
+ *                example:
+ *                  message: "User joeexotic registered."
+ *        "400":
+ *          description: If username or password is not specified in the header.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: Return message.
+ *                example:
+ *                  message: "Username and password required."
+ *        "401":
+ *          description: User does not have proper authorization.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/UnauthorizedMessage'
+ *        "500":
+ *          description: Server error occurred.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
 app.post('/api/v1/register', (req, res) => {
   if (tokenInvalid(req)){
-    return getRes.status(401).send({
+    return res.status(401).send({
       message: 'Authorization failed.'
     });
   }
@@ -161,7 +386,7 @@ app.post('/api/v1/register', (req, res) => {
     });
   }
 
-  _hash(plainPW, saltRounds, function(err, hash) {
+  _hash(plainPW, saltRounds, (err, hash) => {
     if (err) {
       logger.log({
         level: 'error',
@@ -205,7 +430,7 @@ app.post('/api/v1/register', (req, res) => {
 function tokenInvalid(req) {
   if (!authPresent(req, 'Bearer')) {
     logger.log({
-      level: 'error',
+      level: 'info',
       message: `${req.method} request to ${req.url} failed. Error: No Bearer token present`
     });
     return true;
@@ -236,8 +461,8 @@ function authPresent(req, type) {
 }
 
 // Start Node server
-const port = process.env.PORT || 8000;
-app.listen(port, () => console.log(`Listening on port ${port}..`));
+const port = apiPort|| 8000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
 
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);

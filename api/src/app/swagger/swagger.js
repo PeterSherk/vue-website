@@ -21,6 +21,10 @@ const swaggerDefinition = {
     {
       url: 'http://localhost:8000/api/v1',
       description: 'Development server'
+    },
+    {
+      url: 'https://api.petersherk.com/api/v1',
+      description: 'AWS deployed server'
     }
   ]
 };

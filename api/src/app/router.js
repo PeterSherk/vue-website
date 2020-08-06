@@ -2,6 +2,7 @@ import express, { json } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpecs from './swagger/swagger';
 import cors from 'cors';
+import helmet from 'helmet';
 import { sign, verify } from 'jsonwebtoken';
 import { compare, hash as _hash } from 'bcrypt';
 import { Pool } from 'pg';
@@ -13,7 +14,9 @@ const app = express();
 // Enable JSON processing
 app.use(json());
 // Enable CORS policy as open for all
-app.use(cors())
+app.use(cors());
+// Enable base HTTP Request security
+app.use(helmet());
 //Swagger endpoint for documentation
 var options = {
   swaggerOptions: {
@@ -102,6 +105,56 @@ app.get('/api/v1/projects', (req ,getRes)=> {
         message: `${req.method} request to ${req.url} successful.`
       });
       return getRes.send(qRes.rows);
+    }
+  });
+});
+
+/**
+ * @swagger
+ * path:
+ *  /projects/{projectId}:
+ *    get:
+ *      summary: Get a list of projects
+ *      tags: [Projects]
+ *      parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         description: The project ID of a specific project.
+ *         schema:
+ *           type: number
+ *           minLength: 1
+ *      responses:
+ *        "200":
+ *          description: A list of projects
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Project'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
+
+  pool.query(`SELECT * FROM website.project WHERE id=${req.params.projectId}`, (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return getRes.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      return getRes.send(qRes.rows[0]);
     }
   });
 });
@@ -461,7 +514,7 @@ function authPresent(req, type) {
 }
 
 // Start Node server
-const port = apiPort|| 8000;
+const port = apiPort || 8000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
 process.on('SIGTERM', shutDown);

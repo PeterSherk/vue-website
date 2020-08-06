@@ -89,8 +89,13 @@ const pool = new Pool({
  *                $ref: '#/components/responses/ErrorMessage'
  */
 app.get('/api/v1/projects', (req ,getRes)=> {
+  let fields = '*'
+  let filter = req.query.filter
+  if (filter) {
+    fields = 'id, company, name, year'
+  }
 
-  pool.query('SELECT * FROM website.project', (err, qRes) => {
+  pool.query(`SELECT ${fields} FROM website.project`, (err, qRes) => {
     if (err) {
       logger.log({
         level: 'error',
@@ -155,48 +160,6 @@ app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
         message: `${req.method} request to ${req.url} successful.`
       });
       return getRes.send(qRes.rows[0]);
-    }
-  });
-});
-
-/**
- * @swagger
- * path:
- *  /projects/overview:
- *    get:
- *      summary: Get a list of project overviews
- *      tags: [Projects]
- *      responses:
- *        "200":
- *          description: A list of projects overviews
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/ProjectOverview'
- *        "500":
- *          description: Generic error occurred
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/responses/ErrorMessage'
- */
-app.get('/api/v1/projects/overview', (req ,getRes)=> {
-
-  pool.query('SELECT id, company, name, year FROM website.project', (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return getRes.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      return getRes.send(qRes.rows);
     }
   });
 });

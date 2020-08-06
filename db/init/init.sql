@@ -5,7 +5,30 @@
 -- Dumped from database version 12.3
 -- Dumped by pg_dump version 12.2
 
--- Started on 2020-08-05 22:36:07 EDT
+-- Started on 2020-08-06 09:22:08 EDT
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 3201 (class 1262 OID 16387)
+-- Name: website; Type: DATABASE; Schema: -; Owner: p_website
+--
+
+CREATE DATABASE website WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+ALTER DATABASE website OWNER TO p_website;
+
+\connect website
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -62,6 +85,7 @@ CREATE TABLE website.project (
 
 ALTER TABLE website.project OWNER TO p_website;
 
+
 --
 -- TOC entry 3067 (class 2606 OID 16406)
 -- Name: login login_pkey; Type: CONSTRAINT; Schema: website; Owner: p_website
@@ -80,7 +104,7 @@ ALTER TABLE ONLY website.project
     ADD CONSTRAINT pky_project_id PRIMARY KEY (id);
 
 
--- Completed on 2020-08-05 22:36:08 EDT
+-- Completed on 2020-08-06 09:22:09 EDT
 
 --
 -- PostgreSQL database dump complete

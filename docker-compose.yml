@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+
+  db:
+    container_name: website-db
+    image: postgres
+    restart: always
+    env_file:
+      - postgres.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d

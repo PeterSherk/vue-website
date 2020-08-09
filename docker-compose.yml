@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: website-api
+    image: website-api
+    restart: always
+    env_file:
+      - ./api/.env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+  db:
+    container_name: website-db
+    image: postgres
+    restart: always
+    env_file:
+      - postgres.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - /path/to/data:/var/lib/postgresql/data

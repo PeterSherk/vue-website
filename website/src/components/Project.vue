@@ -1,6 +1,14 @@
 <template>
   <section class="screen__full-height section">
-    <div v-if="project">
+    <template v-if="loading">
+      <Loader/>
+    </template>
+    <template v-else-if="errored">
+      <GenericError errorMessage="Oops! An error occurred." errorPicturePath="img/moose_404.jpeg"
+        altText="moose error"/>
+      <!-- <h1 class="title has-text-centered">There has been an error.</h1> -->
+    </template>
+    <template v-else-if="project && !loading">
       <div class="columns is-mobile is-multiline is-centered has-text-centered">
         <h1 class="title column is-full">{{project.name}}</h1>
         <h2 class="subtitle column is-full">Company : <u>{{project.company}}</u></h2>
@@ -28,10 +36,10 @@
           <div class="column is-full"></div>
         </div>
       </div>
-    </div>
-    <div v-else>
+    </template>
+    <template v-else>
       <h1 class="title has-text-centered">Project "{{pathId}}" doesn't exist.</h1>
-    </div>
+    </template>
   </section>
 </template>
 
@@ -40,23 +48,40 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
+import { AxiosResponse, AxiosError } from 'axios'
+import GenericError from '@/components/GenericError.vue'
+import Loader from '@/views/Loader.vue'
 
 @Component({
-  name: 'project'
+  name: 'project',
+  components: {
+    GenericError,
+    Loader
+  }
 })
 export default class ProjectDetails extends Vue {
   private project: Project | undefined
   private projectService: ProjectService = new ProjectService()
   private pathId: number | undefined
+  private loading: boolean = true;
+  private errored: boolean = false;
 
   created () {
     this.pathId = +this.$route.params['projectId']
-    this.project = this.currentProject(this.pathId)
   }
 
-  currentProject (projId: number): Project | undefined {
-    // this will eventually be an HTTP call
-    return this.projectService.getProject(projId)
+  mounted () {
+    this.projectService.getProject(this.pathId)
+      .then((response: AxiosResponse<Project>) => {
+        this.project = response.data
+      })
+      .catch((error: AxiosError) => {
+        console.log(error)
+        this.errored = true
+      })
+      .finally(() => {
+        this.loading = false
+      })
   }
 
   descrSize (image: string): string {
@@ -65,6 +90,9 @@ export default class ProjectDetails extends Vue {
 
   data () {
     return {
+      project: null,
+      loading: true,
+      errored: false,
       publicPath: process.env.BASE_URL
     }
   }

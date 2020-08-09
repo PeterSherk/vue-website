@@ -65,6 +65,7 @@ export default class ProjectDetails extends Vue {
   private pathId: number | undefined
   private loading: boolean = true;
   private errored: boolean = false;
+  private error: AxiosError<any> | undefined
 
   created () {
     this.pathId = +this.$route.params['projectId']
@@ -76,7 +77,7 @@ export default class ProjectDetails extends Vue {
         this.project = response.data
       })
       .catch((error: AxiosError) => {
-        console.log(error)
+        this.error = error
         this.errored = true
       })
       .finally(() => {
@@ -93,6 +94,7 @@ export default class ProjectDetails extends Vue {
       project: null,
       loading: true,
       errored: false,
+      error: undefined,
       publicPath: process.env.BASE_URL
     }
   }

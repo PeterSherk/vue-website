@@ -61,6 +61,7 @@ export default class Coding extends Vue {
   private projectService: ProjectService = new ProjectService()
   private loading: boolean | undefined
   private errored: boolean | undefined
+  private error: AxiosError<any> | undefined
 
   mounted () {
     this.projectService.getProjects('overview')
@@ -68,7 +69,7 @@ export default class Coding extends Vue {
         this.projects = response.data
       })
       .catch((error: AxiosError) => {
-        console.log(error)
+        this.error = error
         this.errored = true
       })
       .finally(() => {
@@ -79,6 +80,7 @@ export default class Coding extends Vue {
   data () {
     return {
       errored: false,
+      error: undefined,
       loading: true
     }
   }

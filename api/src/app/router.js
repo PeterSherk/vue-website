@@ -74,6 +74,11 @@ const pool = new Pool({
  *    get:
  *      summary: Get a list of projects
  *      tags: [Projects]
+ *      parameters:
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
  *      responses:
  *        "200":
  *          description: A list of projects
@@ -91,7 +96,7 @@ const pool = new Pool({
 app.get('/api/v1/projects', (req ,getRes)=> {
   let fields = '*'
   let filter = req.query.filter
-  if (filter) {
+  if (filter && filter.toLowerCase() == 'overview') {
     fields = 'id, company, name, year'
   }
 
@@ -136,6 +141,8 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Project'
+ *        "204":
+ *          description: No projects for specified project ID
  *        "500":
  *          description: Generic error occurred
  *          content:
@@ -159,7 +166,11 @@ app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
         level: 'info',
         message: `${req.method} request to ${req.url} successful.`
       });
-      return getRes.send(qRes.rows[0]);
+      if (qRes.rows[0]) {
+        return getRes.send(qRes.rows[0]);
+      } else {
+        return getRes.status(204).send({});
+      }
     }
   });
 });

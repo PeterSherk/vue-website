@@ -8,9 +8,7 @@
               <h1 class="title">Projects</h1>
             </div>
             <template v-if="loading">
-              <div class="column is-full">
-                <h1 class="title is-4">Loading...</h1>
-              </div>
+              <Loader/>
             </template>
             <template v-else-if="errored">
               <div class="column is-full">
@@ -49,11 +47,13 @@ import { AxiosResponse, AxiosError } from 'axios'
 import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
 import GenericError from '@/components/GenericError.vue'
+import Loader from '@/views/Loader.vue'
 
 @Component({
   name: 'coding',
   components: {
-    GenericError
+    GenericError,
+    Loader
   }
 })
 export default class Coding extends Vue {

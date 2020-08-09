@@ -14,7 +14,7 @@ const swaggerDefinition = {
     contact: {
       name: 'Peter Sherk',
       url: 'https://petersherk.com',
-      email: 'psherk95@gmail.com'
+      email: 'peter@petersherk.com'
     }
   },
   servers: [
@@ -24,7 +24,7 @@ const swaggerDefinition = {
     },
     {
       url: 'https://api.petersherk.com/api/v1',
-      description: 'AWS deployed server'
+      description: 'Production server'
     }
   ]
 };

@@ -1,7 +1,7 @@
 <template>
   <section class="screen__full-height section">
     <template v-if="loading">
-      <div class="loader"></div>
+      <Loader/>
     </template>
     <template v-else-if="errored">
       <GenericError errorMessage="Oops! An error occurred." errorPicturePath="img/moose_404.jpeg"
@@ -50,11 +50,13 @@ import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
 import { AxiosResponse, AxiosError } from 'axios'
 import GenericError from '@/components/GenericError.vue'
+import Loader from '@/views/Loader.vue'
 
 @Component({
   name: 'project',
   components: {
-    GenericError
+    GenericError,
+    Loader
   }
 })
 export default class ProjectDetails extends Vue {

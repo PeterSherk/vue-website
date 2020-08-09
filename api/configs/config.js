@@ -1,0 +1,10 @@
+import { config } from 'dotenv';
+config();
+export const user = process.env.DB_USER;
+export const host = process.env.DB_HOST;
+export const database = process.env.DB_NAME;
+export const password = process.env.DB_PASSWORD;
+export const apiPort = parseInt(process.env.PORT, 10);
+export const dbPort = parseInt(process.env.DB_PORT, 10);
+export const jwtSecret = process.env.JWT_SECRET;
+export const saltRounds = parseInt(process.env.SALT_ROUNDS);

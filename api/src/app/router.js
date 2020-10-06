@@ -7,10 +7,18 @@ import { sign, verify } from 'jsonwebtoken';
 import { compare, hash as _hash } from 'bcrypt';
 import { Pool } from 'pg';
 import { logger } from '../../configs/logger';
+import { createMediaSoupWorker, createMediaSoupRouter, getMediaSoupWorker, getMediaSoupRouter } from './mediasoup';
 import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../../configs/config';
 
-// Set up Express server
-const app = express();
+  // Set up Express server
+  const app = express();
+
+  run();
+
+
+async function run() {
+  await createMediaSoupWorker();
+  await createMediaSoupRouter();
 // Enable JSON processing
 app.use(json());
 // Enable CORS policy as open for all
@@ -66,6 +74,16 @@ const pool = new Pool({
  */
 
 // API Endpoints
+
+
+app.get('/api/v1/mediasoup/worker', (req, res) => {
+  res.send(JSON.stringify(getMediaSoupWorker()))
+});
+
+app.get('/api/v1/mediasoup/router', (req, res) => {
+  res.send(JSON.stringify(getMediaSoupRouter()))
+});
+
 
 /**
  * @swagger
@@ -501,8 +519,13 @@ async function shutDown() {
     message: '\nShutting down database connection...'
   });
   await pool.end();
+  await getMediaSoupWorker().close();
+  await getMediaSoupRouter().close();
   console.log("Done.");
   process.exit(0);
+}
+
+
 }
 
 export default app;

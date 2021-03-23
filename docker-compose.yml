@@ -18,10 +18,10 @@ services:
     container_name: website-db
     image: postgres
     restart: always
-    env_file:
-      - postgres.env
+    # env_file:
+    #   - postgres.env
     ports:
       - "5433:5432"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
-      - /path/to/data:/var/lib/postgresql/data
+      - ${DATABASE_LOCAL_STORAGE_PATH}:/var/lib/postgresql/data

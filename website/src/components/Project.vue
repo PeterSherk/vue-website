@@ -68,7 +68,7 @@ export default class ProjectDetails extends Vue {
   private error: AxiosError<any> | undefined
 
   created () {
-    this.pathId = +this.$route.params['projectId']
+    this.pathId = +this.$route.params.projectId
   }
 
   mounted () {

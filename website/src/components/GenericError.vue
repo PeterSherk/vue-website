@@ -4,7 +4,9 @@
       <div class="container has-text-centered">
         <img class="error_picture" :src="`${publicPath}${errorPicturePath}`" :alt="altText" />
         <h1 class="title">{{errorMessage}}</h1>
-        <router-link v-if="navigationPath && navigationText" :to="navigationPath" tag="button" class="button">{{navigationText}}</router-link>
+        <router-link custom v-if="navigationPath && navigationText" :to="navigationPath">
+          <button class="button">{{navigationText}}</button>
+        </router-link>
       </div>
     </div>
   </div>

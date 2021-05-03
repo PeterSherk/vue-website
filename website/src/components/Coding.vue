@@ -18,11 +18,13 @@
             </template>
             <template v-else-if="projects.length != 0 && !loading">
               <div class="column is-one-third" v-for="project in projects" :key="project.id">
-                <router-link tag="div" :to="{ name: 'projects', params: { projectId: project.id }}" class="card grow__box coding__box" v-on:click="print(project.id)">
-                  <div class="card-content">
-                    <p class="title is-4">{{project.name}}</p>
-                    <p class="title is-6">Company - {{project.company}}</p>
-                    <div class="content">{{project.year}}</div>
+                <router-link custom :to="{ name: 'projects', params: { projectId: project.id }}" v-on:click="print(project.id)">
+                  <div class="card grow__box coding__box">
+                    <div class="card-content">
+                      <p class="title is-4">{{project.name}}</p>
+                      <p class="title is-6">Company - {{project.company}}</p>
+                      <div class="content">{{project.year}}</div>
+                    </div>
                   </div>
                 </router-link>
               </div>

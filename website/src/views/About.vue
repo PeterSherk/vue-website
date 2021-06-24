@@ -6,7 +6,7 @@
       </div>
       <div class="column is-6">
         <h1 class="title">Peter Sherk</h1>
-        <h2 class="subtitle">Full-Stack Software Engineer - Fidelity Charitable</h2>
+        <h2 class="subtitle">Full-Stack Software Engineer - Bandwidth</h2>
         <div class="content">
           <p>
             Coming into college, I had no idea what my future held.
@@ -28,12 +28,10 @@
             as a QA Engineer and <a href="https://www.volvotrucks.us" target="_blank">Volvo</a> as a Software Support Engineer.
             Both of these experiences prepared me immensely for my work at <a href="https://www.fidelity.com/" target="_blank">Fidelity Investments</a> as a researcher, exploring blockchain,
             distributed systems and the future of technology. After a year of research, I looked within Fidelity for something that would
-            bring me back to some of the core Software Engineering tenants I loved.
+            bring me back to some of the core Software Engineering tenants I loved. This brought me to a role at <a href="https://www.fidelitycharitable.org" target="_blank">Fidelity Charitable</a>, building a platform that helps people support the charities they love.
           </p>
           <p>
-            I found my current role as a Full-Stack Engineer for
-            <a href="https://www.fidelitycharitable.org" target="_blank">Fidelity Charitable</a>,
-            and have been very happy building a platform that helps people support the charities they love.
+            I currently work as a Full-Stack Engineer for <a href="https://www.bandwidth.com" target="_blank">Bandwidth Inc.</a> building a next-gen WebRTC platform, as well as leading development on a new MFA solution.
           </p>
           <p>
             In my free time, I love to <strong>travel</strong> and <strong>cook</strong>

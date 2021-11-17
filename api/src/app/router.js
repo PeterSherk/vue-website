@@ -4,12 +4,12 @@ import swaggerSpecs from './swagger/swagger';
 import cors from 'cors';
 import helmet from 'helmet';
 import { sign, verify } from 'jsonwebtoken';
-import { compare, hash as _hash } from 'bcrypt';
+import { compare, hash as _hash } from 'bcryptjs';
 import { Pool } from 'pg';
-import { logger } from '../../configs/logger';
-import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../../configs/config';
+import { logger } from '../configs/logger';
+import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../configs/config';
 
-// Set up Express server
+// Set up Express servers
 const app = express();
 // Enable JSON processing
 app.use(json());

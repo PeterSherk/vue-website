@@ -9,7 +9,7 @@ import { Pool } from 'pg';
 import { logger } from '../configs/logger';
 import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../configs/config';
 
-// Set up Express server
+// Set up Express servers
 const app = express();
 // Enable JSON processing
 app.use(json());

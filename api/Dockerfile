@@ -10,7 +10,7 @@ RUN npm ci
 RUN npm run build
 RUN npm ci --production
 
-FROM node:lts-alpine as runner
+FROM node:lts as runner
 
 WORKDIR /usr/src/app
 

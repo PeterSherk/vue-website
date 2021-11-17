@@ -1,19 +1,22 @@
+FROM node:lts as builder
 
-
-FROM node:12
-
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm install
-
-# Bundle app source
 COPY . .
 
+# RUN apt install make gcc g++ python
+
+RUN npm ci
+RUN npm run build
+RUN npm ci --production
+
+FROM node:lts-alpine as runner
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./
+COPY --from=builder /usr/src/app/dist ./dist
+
 EXPOSE 8080
-CMD [ "node", "index.js" ]
+CMD [ "npm", "start" ]

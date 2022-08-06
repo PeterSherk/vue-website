@@ -1,17 +1,17 @@
 /**
- * @swagger
+ * @openapi
  *  components:
  *    responses:
- *      ErrorMessage:
+ *      SuccessMessage:
  *        properties:
  *          message:
  *            type: string
  *            description: Response message.
  *        example:
- *            message: "An error occurred."
+ *            message: "Request was successful."
  *
  */
-class ErrorMessage {
+class SuccessMessage {
   constructor(message) {
     this.message = message;
   }

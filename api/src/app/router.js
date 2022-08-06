@@ -1,6 +1,6 @@
 import express, { json } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpecs from './swagger/swagger';
+import swaggerSpecs from './openapi/swagger';
 import cors from 'cors';
 import helmet from 'helmet';
 import { sign, verify } from 'jsonwebtoken';
@@ -37,14 +37,21 @@ const pool = new Pool({
 // Define tags for Swagger
 
 /**
- * @swagger
+ * @openapi
  * tags:
  *   name: Projects
  *   description: Endpoints to interact with personal and professional projects for my personal website.
  */
 
 /**
- * @swagger
+ * @openapi
+ * tags:
+ *   name: Cooking
+ *   description: Endpoints to interact with cooking and recipes.
+ */
+
+/**
+ * @openapi
  * tags:
  *   name: Users
  *   description: Endpoints to interact with user's in my website. User's can add custom content and edit their own content.
@@ -53,7 +60,7 @@ const pool = new Pool({
 // Define auth types for Swagger
 
 /**
- * @swagger
+ * @openapi
  * components:
  *   securitySchemes:
  *     BasicAuth:
@@ -68,8 +75,7 @@ const pool = new Pool({
 // API Endpoints
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /projects:
  *    get:
  *      summary: Get a list of projects
@@ -120,8 +126,52 @@ app.get('/api/v1/projects', (req ,getRes)=> {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
+ *  /recipes:
+ *    post:
+ *      summary: Create a recipe
+ *      tags: [Cooking]
+ *      responses:
+ *        "201":
+ *          description: Recipe ID of recipe successfully created
+ *          content:
+ *            application/json::
+ *              schema:
+ *                message:
+ *                  type: string
+ *                  description: Response message with recipe ID
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.post('/api/v1/recipes', (req, res) => {
+  const body = JSON.parse(req.body);
+  pool.query(`INSERT INTO website.recipes VALUES ${body}`, (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return getRes.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      return getRes.status(201).send({
+        message: `Recipe created with ID ${qRes.id}`
+      });
+    }
+  });
+})
+
+/**
+ * @openapi
  *  /projects/{projectId}:
  *    get:
  *      summary: Get a list of projects
@@ -143,6 +193,12 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *                $ref: '#/components/schemas/Project'
  *        "204":
  *          description: No projects for specified project ID
+ *        "400":
+ *          description: Bad Request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
  *        "500":
  *          description: Generic error occurred
  *          content:
@@ -152,7 +208,18 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  */
 app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
 
-  pool.query(`SELECT * FROM website.project WHERE id=${req.params.projectId}`, (err, qRes) => {
+  const projectId = req.params.projectId
+  if (isNaN(projectId) && isNaN(parseFloat(projectId))) {
+    logger.log({
+      level: 'info',
+      message: `${req.method} request to ${req.url} is a 400. Bad project ID: ${projectId}`
+    });
+    return getRes.status(400).json({
+      message: 'Project ID must be a number.'
+    })
+  }
+
+  pool.query(`SELECT * FROM website.project WHERE id=${projectId}`, (err, qRes) => {
     if (err) {
       logger.log({
         level: 'error',
@@ -176,8 +243,7 @@ app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /users/{username}:
  *    delete:
  *      summary: Delete's a selected user, only if properly authorized.
@@ -254,8 +320,7 @@ app.delete('/api/v1/users/:username', (req, res) => {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /login:
  *    post:
  *      summary: Login to REST API and receive auth credentials.
@@ -343,8 +408,7 @@ app.post('/api/v1/login', (req, res) => {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /register:
  *    post:
  *      summary: Endpoint to register a new user with the system.

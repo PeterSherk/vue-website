@@ -1,3 +1,3 @@
-import 'core-js/es6';
+import 'core-js/actual';
 import 'regenerator-runtime/runtime';
 import "./app/router"

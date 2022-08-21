@@ -131,15 +131,28 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *    post:
  *      summary: Create a recipe
  *      tags: [Cooking]
+ *      security:
+ *        - BearerAuth: []
+ *      requestBody:
+ *        description: The Recipe to create, including details on how it tasted
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Recipe'
  *      responses:
  *        "201":
  *          description: Recipe ID of recipe successfully created
  *          content:
- *            application/json::
+ *            application/json:
  *              schema:
- *                message:
- *                  type: string
- *                  description: Response message with recipe ID
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: Response message
+ *                example:
+ *                  message: "Recipe created"
  *        "500":
  *          description: Generic error occurred
  *          content:
@@ -148,8 +161,60 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *                $ref: '#/components/responses/ErrorMessage'
  */
 app.post('/api/v1/recipes', (req, res) => {
-  const body = JSON.parse(req.body);
-  pool.query(`INSERT INTO website.recipes VALUES ${body}`, (err, qRes) => {
+  if (tokenInvalid(req)){
+    return res.status(401).send({
+      message: 'Authorization failed.'
+    });
+  }
+
+  const body = req.body;
+  pool.query(`INSERT INTO website.recipes(display_name, website_url, description, picture_url, steps, ingredients, date_ate)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [body.displayName, body.websiteUrl, body.description, body.pictureUrl, body.steps,
+        body.ingredients, body.dateAte],
+      (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return res.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      return res.status(201).send({
+        message: `Recipe created.`
+      });
+    }
+  });
+});
+
+/**
+ * @openapi
+ *  /recipes:
+ *    get:
+ *      summary: Get a list of recipes
+ *      tags: [Cooking]
+ *      responses:
+ *        "200":
+ *          description: A list of recipes
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Recipe'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.get('/api/v1/recipes', (req ,getRes)=> {
+  pool.query(`SELECT * FROM website.recipes`, (err, qRes) => {
     if (err) {
       logger.log({
         level: 'error',
@@ -163,12 +228,75 @@ app.post('/api/v1/recipes', (req, res) => {
         level: 'info',
         message: `${req.method} request to ${req.url} successful.`
       });
-      return getRes.status(201).send({
-        message: `Recipe created with ID ${qRes.id}`
-      });
+      return getRes.send(qRes.rows);
     }
   });
-})
+});
+
+/**
+ * @openapi
+ *  /recipes/{recipeId}:
+ *    get:
+ *      summary: Get a specific recipe
+ *      tags: [Cooking]
+ *      parameters:
+ *       - in: path
+ *         name: recipeId
+ *         required: true
+ *         description: The recipe ID of a specific recipe.
+ *         schema:
+ *           type: number
+ *           minLength: 1
+ *      responses:
+ *        "200":
+ *          description: A specific recipe
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Recipe'
+ *        "204":
+ *          description: No projects for specified project ID
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+ app.get('/api/v1/recipes/:recipeId', (req ,getRes)=> {
+  const recipeId = req.params.recipeId
+  if (isNaN(recipeId) && isNaN(parseFloat(recipeId))) {
+    logger.log({
+      level: 'info',
+      message: `${req.method} request to ${req.url} is a 400. Bad recipe ID: ${recipeId}`
+    });
+    return getRes.status(400).json({
+      message: 'Recipe ID must be a number.'
+    })
+  }
+
+  pool.query(`SELECT * FROM website.recipes WHERE id=${recipeId}`, (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return getRes.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      if (qRes.rows[0]) {
+        return getRes.send(qRes.rows[0]);
+      } else {
+        return getRes.status(204).send({});
+      }
+    }
+  });
+});
 
 /**
  * @openapi

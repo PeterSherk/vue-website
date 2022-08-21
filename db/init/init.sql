@@ -68,15 +68,15 @@ ALTER TABLE website.project OWNER TO p_website;
 --
 
 CREATE TABLE website.recipes (
-    id numeric NOT NULL,
+    id bigserial primary key NOT NULL,
     display_name text,
     website_url text,
     description text,
     picture_url text,
     steps jsonb[],
-    ingredients jsonb[],
+    ingredients jsonb,
     date_ate date,
-    create_date date NOT NULL
+    create_date timestamp not null default CURRENT_TIMESTAMP
 );
 
 

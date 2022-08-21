@@ -1,6 +1,6 @@
 import express, { json } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpecs from './swagger/swagger';
+import swaggerSpecs from './openapi/swagger';
 import cors from 'cors';
 import helmet from 'helmet';
 import { sign, verify } from 'jsonwebtoken';
@@ -37,14 +37,21 @@ const pool = new Pool({
 // Define tags for Swagger
 
 /**
- * @swagger
+ * @openapi
  * tags:
  *   name: Projects
  *   description: Endpoints to interact with personal and professional projects for my personal website.
  */
 
 /**
- * @swagger
+ * @openapi
+ * tags:
+ *   name: Cooking
+ *   description: Endpoints to interact with cooking and recipes.
+ */
+
+/**
+ * @openapi
  * tags:
  *   name: Users
  *   description: Endpoints to interact with user's in my website. User's can add custom content and edit their own content.
@@ -53,7 +60,7 @@ const pool = new Pool({
 // Define auth types for Swagger
 
 /**
- * @swagger
+ * @openapi
  * components:
  *   securitySchemes:
  *     BasicAuth:
@@ -68,8 +75,7 @@ const pool = new Pool({
 // API Endpoints
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /projects:
  *    get:
  *      summary: Get a list of projects
@@ -120,27 +126,134 @@ app.get('/api/v1/projects', (req ,getRes)=> {
 });
 
 /**
- * @swagger
- * path:
- *  /projects/{projectId}:
+ * @openapi
+ *  /recipes:
+ *    post:
+ *      summary: Create a recipe
+ *      tags: [Cooking]
+ *      security:
+ *        - BearerAuth: []
+ *      requestBody:
+ *        description: The Recipe to create, including details on how it tasted
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Recipe'
+ *      responses:
+ *        "201":
+ *          description: Recipe ID of recipe successfully created
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: Response message
+ *                example:
+ *                  message: "Recipe created"
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.post('/api/v1/recipes', (req, res) => {
+  if (tokenInvalid(req)){
+    return res.status(401).send({
+      message: 'Authorization failed.'
+    });
+  }
+
+  const body = req.body;
+  pool.query(`INSERT INTO website.recipes(display_name, website_url, description, picture_url, steps, ingredients, date_ate)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [body.displayName, body.websiteUrl, body.description, body.pictureUrl, body.steps,
+        body.ingredients, body.dateAte],
+      (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return res.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      return res.status(201).send({
+        message: `Recipe created.`
+      });
+    }
+  });
+});
+
+/**
+ * @openapi
+ *  /recipes:
  *    get:
- *      summary: Get a list of projects
- *      tags: [Projects]
+ *      summary: Get a list of recipes
+ *      tags: [Cooking]
+ *      responses:
+ *        "200":
+ *          description: A list of recipes
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Recipe'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.get('/api/v1/recipes', (req ,getRes)=> {
+  pool.query(`SELECT * FROM website.recipes`, (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return getRes.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      return getRes.send(qRes.rows);
+    }
+  });
+});
+
+/**
+ * @openapi
+ *  /recipes/{recipeId}:
+ *    get:
+ *      summary: Get a specific recipe
+ *      tags: [Cooking]
  *      parameters:
  *       - in: path
- *         name: projectId
+ *         name: recipeId
  *         required: true
- *         description: The project ID of a specific project.
+ *         description: The recipe ID of a specific recipe.
  *         schema:
  *           type: number
  *           minLength: 1
  *      responses:
  *        "200":
- *          description: A list of projects
+ *          description: A specific recipe
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Project'
+ *                $ref: '#/components/schemas/Recipe'
  *        "204":
  *          description: No projects for specified project ID
  *        "500":
@@ -150,9 +263,19 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
+ app.get('/api/v1/recipes/:recipeId', (req ,getRes)=> {
+  const recipeId = req.params.recipeId
+  if (isNaN(recipeId) && isNaN(parseFloat(recipeId))) {
+    logger.log({
+      level: 'info',
+      message: `${req.method} request to ${req.url} is a 400. Bad recipe ID: ${recipeId}`
+    });
+    return getRes.status(400).json({
+      message: 'Recipe ID must be a number.'
+    })
+  }
 
-  pool.query(`SELECT * FROM website.project WHERE id=${req.params.projectId}`, (err, qRes) => {
+  pool.query(`SELECT * FROM website.recipes WHERE id=${recipeId}`, (err, qRes) => {
     if (err) {
       logger.log({
         level: 'error',
@@ -176,8 +299,79 @@ app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
+ *  /projects/{projectId}:
+ *    get:
+ *      summary: Get a list of projects
+ *      tags: [Projects]
+ *      parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         description: The project ID of a specific project.
+ *         schema:
+ *           type: number
+ *           minLength: 1
+ *      responses:
+ *        "200":
+ *          description: A list of projects
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Project'
+ *        "204":
+ *          description: No projects for specified project ID
+ *        "400":
+ *          description: Bad Request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
+
+  const projectId = req.params.projectId
+  if (isNaN(projectId) && isNaN(parseFloat(projectId))) {
+    logger.log({
+      level: 'info',
+      message: `${req.method} request to ${req.url} is a 400. Bad project ID: ${projectId}`
+    });
+    return getRes.status(400).json({
+      message: 'Project ID must be a number.'
+    })
+  }
+
+  pool.query(`SELECT * FROM website.project WHERE id=${projectId}`, (err, qRes) => {
+    if (err) {
+      logger.log({
+        level: 'error',
+        message: `${req.method} request to ${req.url} failed. Error: ${err}`
+      });
+      return getRes.status(500).send({
+        message: 'Error occurred.'
+      });
+    } else {
+      logger.log({
+        level: 'info',
+        message: `${req.method} request to ${req.url} successful.`
+      });
+      if (qRes.rows[0]) {
+        return getRes.send(qRes.rows[0]);
+      } else {
+        return getRes.status(204).send({});
+      }
+    }
+  });
+});
+
+/**
+ * @openapi
  *  /users/{username}:
  *    delete:
  *      summary: Delete's a selected user, only if properly authorized.
@@ -254,8 +448,7 @@ app.delete('/api/v1/users/:username', (req, res) => {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /login:
  *    post:
  *      summary: Login to REST API and receive auth credentials.
@@ -343,8 +536,7 @@ app.post('/api/v1/login', (req, res) => {
 });
 
 /**
- * @swagger
- * path:
+ * @openapi
  *  /register:
  *    post:
  *      summary: Endpoint to register a new user with the system.

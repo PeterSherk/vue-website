@@ -2,23 +2,11 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.3
--- Dumped by pg_dump version 12.2
+-- Dumped from database version 12.3 (Debian 12.3-1.pgdg100+1)
+-- Dumped by pg_dump version 14.4
 
--- Started on 2020-08-06 09:22:08 EDT
+-- Started on 2022-08-06 16:11:19 EDT
 
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
 -- TOC entry 3201 (class 1262 OID 16387)
 -- Name: website; Type: DATABASE; Schema: -; Owner: p_website
 --
@@ -42,7 +30,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 5 (class 2615 OID 16389)
+-- TOC entry 6 (class 2615 OID 16386)
 -- Name: website; Type: SCHEMA; Schema: -; Owner: p_website
 --
 
@@ -56,7 +44,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 204 (class 1259 OID 16399)
+-- TOC entry 203 (class 1259 OID 16387)
 -- Name: login; Type: TABLE; Schema: website; Owner: p_website
 --
 
@@ -69,7 +57,7 @@ CREATE TABLE website.login (
 ALTER TABLE website.login OWNER TO p_website;
 
 --
--- TOC entry 203 (class 1259 OID 16390)
+-- TOC entry 204 (class 1259 OID 16393)
 -- Name: project; Type: TABLE; Schema: website; Owner: p_website
 --
 
@@ -85,9 +73,28 @@ CREATE TABLE website.project (
 
 ALTER TABLE website.project OWNER TO p_website;
 
+--
+-- TOC entry 205 (class 1259 OID 24595)
+-- Name: recipes; Type: TABLE; Schema: website; Owner: p_website
+--
+
+CREATE TABLE website.recipes (
+    id bigserial primary key NOT NULL,
+    display_name text,
+    website_url text,
+    description text,
+    picture_url text,
+    steps jsonb[],
+    ingredients jsonb,
+    date_ate date,
+    create_date timestamp not null default CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE website.recipes OWNER TO p_website;
 
 --
--- TOC entry 3067 (class 2606 OID 16406)
+-- TOC entry 2788 (class 2606 OID 16400)
 -- Name: login login_pkey; Type: CONSTRAINT; Schema: website; Owner: p_website
 --
 
@@ -96,7 +103,7 @@ ALTER TABLE ONLY website.login
 
 
 --
--- TOC entry 3065 (class 2606 OID 16397)
+-- TOC entry 2790 (class 2606 OID 16402)
 -- Name: project pky_project_id; Type: CONSTRAINT; Schema: website; Owner: p_website
 --
 
@@ -104,7 +111,16 @@ ALTER TABLE ONLY website.project
     ADD CONSTRAINT pky_project_id PRIMARY KEY (id);
 
 
--- Completed on 2020-08-06 09:22:09 EDT
+--
+-- TOC entry 2792 (class 2606 OID 24602)
+-- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: website; Owner: p_website
+--
+
+ALTER TABLE ONLY website.recipes
+    ADD CONSTRAINT recipes_pkey PRIMARY KEY (id);
+
+
+-- Completed on 2022-08-06 16:11:19 EDT
 
 --
 -- PostgreSQL database dump complete

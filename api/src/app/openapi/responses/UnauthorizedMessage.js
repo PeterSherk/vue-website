@@ -1,17 +1,17 @@
 /**
- * @swagger
+ * @openapi
  *  components:
  *    responses:
- *      SuccessMessage:
+ *      UnauthorizedMessage:
  *        properties:
  *          message:
  *            type: string
  *            description: Response message.
  *        example:
- *            message: "Request was successful."
+ *            message: "Authorization failed."
  *
  */
-class SuccessMessage {
+class UnauthorizedMessage {
   constructor(message) {
     this.message = message;
   }

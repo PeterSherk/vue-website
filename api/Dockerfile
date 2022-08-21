@@ -2,11 +2,13 @@ FROM node:lts as builder
 
 WORKDIR /usr/src/app
 
+COPY ./package*.json .
+RUN npm ci
+
 COPY . .
 
 # RUN apt install make gcc g++ python
 
-RUN npm ci
 RUN npm run build
 RUN npm ci --production
 

@@ -7,6 +7,17 @@
 
 -- Started on 2022-08-06 16:11:19 EDT
 
+-- TOC entry 3201 (class 1262 OID 16387)
+-- Name: website; Type: DATABASE; Schema: -; Owner: p_website
+--
+
+CREATE DATABASE website WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+ALTER DATABASE website OWNER TO p_website;
+
+\connect website
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;

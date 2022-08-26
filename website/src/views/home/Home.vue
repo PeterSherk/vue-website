@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="app-home">
     <Banner/>
     <BannerAbout/>
   </div>
@@ -10,7 +10,7 @@ import Banner from '@/views/home/Banner.vue'
 import BannerAbout from '@/views/home/BannerAbout.vue'
 
 export default {
-  name: 'home',
+  name: 'app-home',
   components: {
     Banner,
     BannerAbout

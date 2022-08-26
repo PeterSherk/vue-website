@@ -1,10 +1,13 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/home/Home.vue'
+import About from '../views/About.vue'
+import Coding from '../components/Coding.vue'
+import Cooking from '../components/Cooking.vue'
+import Music from '../components/Music.vue'
+import Project from '../components/Project.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 
-Vue.use(VueRouter)
-
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
@@ -13,64 +16,44 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     path: '/coding',
     name: 'coding',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/Coding.vue')
+    component: Coding
   },
   {
     path: '/cooking',
     name: 'cooking',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/Cooking.vue')
+    component: Cooking
   },
   {
     path: '/music',
     name: 'music',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/Music.vue')
+    component: Music
   },
   {
     path: '/projects/:projectId',
     name: 'projects',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/Project.vue')
+    component: Project
   },
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: '404',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/PageNotFound.vue')
+    component: PageNotFound
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes,
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes: routes,
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
       return {
-        x: 0,
-        y: 0
+        top: 0
       }
     }
   }

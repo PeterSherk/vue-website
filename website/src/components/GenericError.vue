@@ -4,7 +4,7 @@
       <div class="container has-text-centered">
         <img class="error_picture" :src="`${publicPath}${errorPicturePath}`" :alt="altText" />
         <h1 class="title">{{errorMessage}}</h1>
-        <router-link custom v-if="navigationPath && navigationText" :to="navigationPath">
+        <router-link v-if="navigationPath && navigationText" :to="navigationPath">
           <button class="button">{{navigationText}}</button>
         </router-link>
       </div>
@@ -13,19 +13,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { prop, Vue } from 'vue-class-component'
 
-@Component
-export default class GenericError extends Vue {
-  @Prop({ default: 'Error!' }) private errorMessage!: string;
-  @Prop({ default: 'img/moose_404.jpeg' }) private errorPicturePath!: string;
-  @Prop({ default: 'Error Picture' }) private altText!: string;
-  @Prop({ default: 'Go Home' }) private navigationText!: string
-  @Prop({ default: '/' }) private navigationPath!: string
+class GenericErrorProps {
+  errorMessage = prop<string>({ default: 'Error!' })
+  errorPicturePath = prop<string>({ default: 'img/moose_404.jpeg' })
+  altText = prop<string>({ default: 'Error Picture' })
+  navigationText = prop<string>({ default: 'Go Home' })
+  navigationPath = prop<string>({ default: '/' })
+}
 
+export default class GenericError extends Vue.with(GenericErrorProps) {
   data () {
     return {
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.publicPath
     }
   }
 }

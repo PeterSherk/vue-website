@@ -44,15 +44,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
 import { AxiosResponse, AxiosError } from 'axios'
 import GenericError from '@/components/GenericError.vue'
 import Loader from '@/views/Loader.vue'
 
-@Component({
+@Options({
   name: 'project',
   components: {
     GenericError,
@@ -60,12 +59,12 @@ import Loader from '@/views/Loader.vue'
   }
 })
 export default class ProjectDetails extends Vue {
-  private project: Project | undefined
+  project: Project | undefined
   private projectService: ProjectService = new ProjectService()
-  private pathId: number | undefined
-  private loading: boolean = true;
-  private errored: boolean = false;
-  private error: AxiosError<any> | undefined
+  pathId: number | undefined
+  loading = true;
+  errored = false;
+  error: AxiosError<any> | undefined
 
   created () {
     this.pathId = +this.$route.params.projectId

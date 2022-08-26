@@ -16,17 +16,17 @@
                         <div class="column is-5 is-narrow-tablet is-narrow-mobile">
                             <div class="tile is-ancestor">
                                 <div class="tile is-vertical is-parent">
-                                    <router-link custom to="/coding" class="tile is-child">
+                                    <router-link to="coding" class="tile is-child">
                                         <div class="box grow__box">
                                             <IconTile tileTitle="Coding" icon="laptop-code"/>
                                         </div>
                                     </router-link>
-                                    <router-link custom to="/cooking" class="tile is-child">
+                                    <router-link to="cooking" class="tile is-child">
                                         <div class=" box grow__box">
                                             <IconTile tileTitle="Cooking" icon="cookie-bite"/>
                                         </div>
                                     </router-link>
-                                    <router-link custom to="/music" class="tile is-child">
+                                    <router-link to="music" class="tile is-child">
                                         <div class="box grow__box">
                                             <IconTile tileTitle="Music" icon="compact-disc"/>
                                         </div>
@@ -45,7 +45,7 @@
 import IconTile from '@/components/IconTile.vue'
 
 export default {
-  name: 'banner',
+  name: 'app-banner',
   components: {
     IconTile
   }

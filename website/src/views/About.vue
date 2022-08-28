@@ -1,5 +1,5 @@
 <template>
-  <section id="about" class="screen__full-height section">
+  <section id="app-about" class="screen__full-height section">
     <div class="columns is-centered">
       <div id="about__pic" class="column is-4-desktop is-5-tablet">
         <figure class="images about__head" alt="Picture of Peter"></figure>
@@ -80,6 +80,12 @@
     </div>
   </section>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'app-about',
+}
+</script>
 
 <style lang="scss">
   .about__head {

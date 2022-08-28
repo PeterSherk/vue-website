@@ -1,5 +1,5 @@
 <template>
-  <div id="cooking">
+  <div id="app-cooking">
     <WorkInProgress/>
   </div>
 </template>
@@ -8,7 +8,7 @@
 import WorkInProgress from '@/views/WorkInProgress.vue'
 
 export default {
-  name: 'cooking',
+  name: 'app-cooking',
   components: {
     WorkInProgress
   }

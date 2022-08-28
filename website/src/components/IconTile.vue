@@ -17,12 +17,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { prop, Vue } from 'vue-class-component'
 
-@Component
-export default class IconTile extends Vue {
-  @Prop({ default: 'Default Title' }) private tileTitle!: string;
-  @Prop({ default: 'exclamation-triangle' }) private icon!: string;
+class IconTileProps {
+  tileTitle = prop<string>({ default: 'Default Title' })
+  icon = prop<string>({ default: 'exclamation-triangle' })
+}
+
+export default class IconTile extends Vue.with(IconTileProps) {
 }
 </script>
 

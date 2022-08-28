@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
@@ -19,11 +19,7 @@ library.add(
   faLinkedin, faGithub
 )
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+const app = createApp(App)
+app.component('font-awesome-icon', FontAwesomeIcon)
+app.use(router)
+app.mount('#app')

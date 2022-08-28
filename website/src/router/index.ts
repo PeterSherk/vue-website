@@ -1,10 +1,7 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/home/Home.vue'
 
-Vue.use(VueRouter)
-
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
@@ -51,7 +48,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../components/Project.vue')
   },
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: '404',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -60,17 +57,16 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes,
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes: routes,
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
       return {
-        x: 0,
-        y: 0
+        left: 0,
+        top: 0
       }
     }
   }

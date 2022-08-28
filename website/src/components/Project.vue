@@ -1,5 +1,5 @@
 <template>
-  <section class="screen__full-height section">
+  <section id="app-project" class="screen__full-height section">
     <template v-if="loading">
       <Loader/>
     </template>
@@ -44,28 +44,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
 import { AxiosResponse, AxiosError } from 'axios'
 import GenericError from '@/components/GenericError.vue'
 import Loader from '@/views/Loader.vue'
 
-@Component({
-  name: 'project',
+@Options({
+  name: 'app-project',
   components: {
     GenericError,
     Loader
   }
 })
 export default class ProjectDetails extends Vue {
-  private project: Project | undefined
+  project: Project | undefined
   private projectService: ProjectService = new ProjectService()
-  private pathId: number | undefined
-  private loading: boolean = true;
-  private errored: boolean = false;
-  private error: AxiosError<any> | undefined
+  pathId: number | undefined
+  loading = true;
+  errored = false;
+  error: AxiosError<any> | undefined
 
   created () {
     this.pathId = +this.$route.params.projectId

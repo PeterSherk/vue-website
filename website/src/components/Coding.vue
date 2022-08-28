@@ -1,5 +1,5 @@
 <template>
-  <div id="coding">
+  <div id="app-coding">
     <section class="screen__full-height section">
       <div class="columns">
         <div class="column is-10 is-offset-1">
@@ -18,7 +18,7 @@
             </template>
             <template v-else-if="projects.length != 0 && !loading">
               <div class="column is-one-third" v-for="project in projects" :key="project.id">
-                <router-link custom :to="{ name: 'projects', params: { projectId: project.id }}" v-on:click="print(project.id)">
+                <router-link :to="{ name: 'projects', params: { projectId: project.id }}" v-on:click="project.id.toString()">
                   <div class="card grow__box coding__box">
                     <div class="card-content">
                       <p class="title is-4">{{project.name}}</p>
@@ -43,26 +43,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-class-component'
 import { AxiosResponse, AxiosError } from 'axios'
 import Project from '../assets/models/project'
 import ProjectService from '../services/project.service'
 import GenericError from '@/components/GenericError.vue'
 import Loader from '@/views/Loader.vue'
 
-@Component({
-  name: 'coding',
+@Options({
+  name: 'app-coding',
   components: {
     GenericError,
     Loader
   }
 })
 export default class Coding extends Vue {
-  private projects: Project[] = []
+  projects: Project[] = []
   private projectService: ProjectService = new ProjectService()
-  private loading: boolean | undefined
-  private errored: boolean | undefined
+  loading: boolean | undefined
+  errored: boolean | undefined
   private error: AxiosError<any> | undefined
 
   mounted () {
@@ -77,7 +76,7 @@ export default class Coding extends Vue {
       .finally(() => {
         this.loading = false
       })
-  };
+  }
 
   data () {
     return {

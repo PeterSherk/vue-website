@@ -1,36 +1,27 @@
 # Vue Website Information
+## Background
+My personal website is a place where I can play around with new and exciting technologies. I chose [Vue](https://vuejs.org/) as a frontend stack due to receiving exposure to mostly Angular at work, and a reluctance to pick up React as the only exposure I've had to it has been mostly negative. Vue blends the flexibility of React with what I believe to be a better organizational structure and layout that I am used to with Angular.
+
+## Prerequisites
 This project relies on having NPM installed on your machine. It's recommended to download NVM first and then install npm through that. If you are on Mac, you can install NVM easily through [Homebrew](https://formulae.brew.sh/formula/nvm).
 
-## Project setup
-```
-npm install
-```
+This project has been tested using Node version `v16.16.0`. You can install it with NVM using `nvm install 16.16.0`. Once downloaded, you can activate it using `nvm use 16.16.0`.
 
-## Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Setup
+- Run `npm ci` to download dependencies to `node_modules`.
 
-## Extra NPM steps not necessary to run locally
-### Compiles and minifies for production
-```
-npm run build
-```
+## Running
+To run the development server, run `npm run serve`. This will run the Vue service on `http://localhost:8080/`
 
-### Run your unit tests
-```
-npm run test:unit
-```
+## Building
+To build the serve into a deployment bundle, run `npm run build`. This will generate a `dist` folder containing a production bundle.
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+## Upgrade Notes
+This project was upgraded from Vue 2 to Vue 3. You can read about upgrades [here](https://v3-migration.vuejs.org/)
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Caveats
+If deploying on a 32-bit OS like Raspbian OS, keep in mind that Cypress, which is used for e2e testing, will not be able to download as [it supports only 64-bit systems](https://docs.cypress.io/guides/getting-started/installing-cypress#Operating-System). Attempting an `npm ci` or `npm install` will fail in this case. To navigate around this issue, prepend your npm commands with `CYPRESS_INSTALL_BINARY=0`. For instance, the following command will do a full `npm install` avoiding downloading the Cypress binaries.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```shell
+CYPRESS_INSTALL_BINARY=0 npm install
+```

@@ -1,5 +1,5 @@
 <template>
-  <div id="bannerabout">
+  <div id="app-bannerabout">
     <div class="bannerabout__bio-border"></div>
     <section class="section" style="background-color: #F8F8F8">
       <div class="container">
@@ -42,7 +42,7 @@
 <script lang="ts">
 
 export default {
-  name: 'bannerabout',
+  name: 'app-bannerabout',
   methods: {
     openLink: (link: string, newTab: boolean) => {
       window.open(link, newTab ? '_blank' : '_parent')

@@ -1,5 +1,5 @@
 <template>
-  <section class="screen__full-height section">
+  <section id="app-project" class="screen__full-height section">
     <template v-if="loading">
       <Loader/>
     </template>
@@ -52,7 +52,7 @@ import GenericError from '@/components/GenericError.vue'
 import Loader from '@/views/Loader.vue'
 
 @Options({
-  name: 'project',
+  name: 'app-project',
   components: {
     GenericError,
     Loader

@@ -1,5 +1,5 @@
 <template>
-  <div id="coding">
+  <div id="app-coding">
     <section class="screen__full-height section">
       <div class="columns">
         <div class="column is-10 is-offset-1">
@@ -51,7 +51,7 @@ import GenericError from '@/components/GenericError.vue'
 import Loader from '@/views/Loader.vue'
 
 @Options({
-  name: 'coding',
+  name: 'app-coding',
   components: {
     GenericError,
     Loader

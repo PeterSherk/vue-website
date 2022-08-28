@@ -19,13 +19,12 @@
 <script lang="ts">
 import { prop, Vue } from 'vue-class-component'
 
-
-class IconTitleProps {
+class IconTileProps {
   tileTitle = prop<string>({ default: 'Default Title' })
   icon = prop<string>({ default: 'exclamation-triangle' })
 }
 
-export default class IconTile extends Vue.with(IconTitleProps) {
+export default class IconTile extends Vue.with(IconTileProps) {
 }
 </script>
 

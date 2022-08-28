@@ -26,7 +26,7 @@ class GenericErrorProps {
 export default class GenericError extends Vue.with(GenericErrorProps) {
   data () {
     return {
-      publicPath: process.env.publicPath
+      publicPath: process.env.BASE_URL
     }
   }
 }

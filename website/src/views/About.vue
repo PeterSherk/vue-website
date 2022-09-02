@@ -6,7 +6,7 @@
       </div>
       <div class="column is-6">
         <h1 class="title">Peter Sherk</h1>
-        <h2 class="subtitle">Full-Stack Software Engineer - Bandwidth</h2>
+        <h2 class="subtitle">Senior Full-Stack Software Engineer - Fidelity Investments</h2>
         <div class="content">
           <p>
             Coming into college, I had no idea what my future held.
@@ -31,7 +31,11 @@
             bring me back to some of the core Software Engineering tenants I loved. This brought me to a role at <a href="https://www.fidelitycharitable.org" target="_blank">Fidelity Charitable</a>, building a platform that helps people support the charities they love.
           </p>
           <p>
-            I currently work as a Full-Stack Engineer for <a href="https://www.bandwidth.com" target="_blank">Bandwidth Inc.</a> building a next-gen WebRTC platform, as well as leading development on a new MFA solution.
+            During the COVID-19 Pandemic, I switched to work as a Senior Full-Stack Engineer for <a href="https://www.bandwidth.com" target="_blank">Bandwidth Inc.</a> building a next-gen WebRTC platform, as well as leading development on a new MFA solution and API Adapter. I received immense exposure to CI/CD, automation, AWS Cloud Development,
+            and distributed application knowledge. This spurred my love for cloud technology and an appreciation for the operations side of development. Unfortunately, the company itself was not a great fit for me, and I missed the company culture that I had been a part of at Fidelity.
+          </p>
+          <p>
+            I currently work as a Senior Full-Stack Engineer for <a href="https://www.fidelity.com" target="_blank">Fidelity Investments</a> building the future of portfolio analysis tools.
           </p>
           <p>
             In my free time, I love to <strong>travel</strong> and <strong>cook</strong>

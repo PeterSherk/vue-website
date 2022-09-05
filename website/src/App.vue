@@ -21,7 +21,7 @@
           <router-link class="navbar-item navbar__underline-remove" to="/about">
             About
           </router-link>
-          <a class="navbar-item navbar__underline-remove" href="docs/resume_peter_sherk.pdf" target="_blank">
+          <a class="navbar-item navbar__underline-remove" :href="`${baseUrl}/docs/resume_peter_sherk.pdf`" target="_blank">
             Resume
           </a>
         </div>
@@ -75,6 +75,11 @@ export default {
         })
       }
     })
+  },
+  data () {
+    return {
+      baseUrl: window.location.origin
+    }
   }
 }
 </script>

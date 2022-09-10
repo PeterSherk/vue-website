@@ -28,7 +28,7 @@
           <div class="column is-full"></div>
           <div class="column is-full is-size-2 has-text-centered" v-if="content.title">{{content.title}}</div>
           <div class="columns level project__content-border">
-            <p class="column level-item content has-text-centered" :class="descrSize(content.image)">{{content.description}}</p>
+            <p class="column level-item content has-text-centered" :class="descrSize(content.image!)">{{content.description}}</p>
             <div class="column is-8 level-item" v-if="content.image">
               <img class="project__content-img" :src="`${content.image}`" alt="description image" />
             </div>

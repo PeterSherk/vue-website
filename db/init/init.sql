@@ -111,15 +111,6 @@ ALTER TABLE ONLY website.project
     ADD CONSTRAINT pky_project_id PRIMARY KEY (id);
 
 
---
--- TOC entry 2792 (class 2606 OID 24602)
--- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: website; Owner: p_website
---
-
-ALTER TABLE ONLY website.recipes
-    ADD CONSTRAINT recipes_pkey PRIMARY KEY (id);
-
-
 -- Completed on 2022-08-06 16:11:19 EDT
 
 --

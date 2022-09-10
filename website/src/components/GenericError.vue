@@ -2,7 +2,7 @@
   <div class="hero is-fullheight-with-navbar">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <img class="error_picture" :src="`${publicPath}${errorPicturePath}`" :alt="altText" />
+        <img class="error_picture" :src="`${errorPicturePath}`" :alt="altText" />
         <h1 class="title">{{errorMessage}}</h1>
         <router-link v-if="navigationPath && navigationText" :to="navigationPath">
           <button class="button">{{navigationText}}</button>
@@ -17,18 +17,13 @@ import { prop, Vue } from 'vue-class-component'
 
 class GenericErrorProps {
   errorMessage = prop<string>({ default: 'Error!' })
-  errorPicturePath = prop<string>({ default: 'img/moose_404.jpeg' })
+  errorPicturePath = prop<string>({ default: 'https://api.petersherk.com/img/moose_404.jpeg' })
   altText = prop<string>({ default: 'Error Picture' })
   navigationText = prop<string>({ default: 'Go Home' })
   navigationPath = prop<string>({ default: '/' })
 }
 
 export default class GenericError extends Vue.with(GenericErrorProps) {
-  data () {
-    return {
-      publicPath: process.env.BASE_URL
-    }
-  }
 }
 </script>
 

@@ -4,7 +4,7 @@
       <Loader/>
     </template>
     <template v-else-if="errored">
-      <GenericError errorMessage="Oops! An error occurred." errorPicturePath="img/moose_404.jpeg"
+      <GenericError errorMessage="Oops! An error occurred." errorPicturePath="https://api.petersherk.com/img/moose_404.jpeg"
         altText="moose error"/>
       <!-- <h1 class="title has-text-centered">There has been an error.</h1> -->
     </template>
@@ -30,7 +30,7 @@
           <div class="columns level project__content-border">
             <p class="column level-item content has-text-centered" :class="descrSize(content.image)">{{content.description}}</p>
             <div class="column is-8 level-item" v-if="content.image">
-              <img class="project__content-img" :src="`${publicPath}${content.image}`" alt="description image" />
+              <img class="project__content-img" :src="`${content.image}`" alt="description image" />
             </div>
           </div>
           <div class="column is-full"></div>
@@ -93,8 +93,7 @@ export default class ProjectDetails extends Vue {
       project: null,
       loading: true,
       errored: false,
-      error: undefined,
-      publicPath: process.env.BASE_URL
+      error: undefined
     }
   }
 }

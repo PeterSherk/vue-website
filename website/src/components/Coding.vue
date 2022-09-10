@@ -12,7 +12,7 @@
             </template>
             <template v-else-if="errored">
               <div class="column is-full">
-                <GenericError errorMessage="Oops! An error occurred." errorPicturePath="img/moose_404.jpeg"
+                <GenericError errorMessage="Oops! An error occurred." errorPicturePath="https://api.petersherk.com/img/moose_404.jpeg"
                   altText="moose error"/>
               </div>
             </template>

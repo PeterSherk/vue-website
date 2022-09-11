@@ -17,3 +17,4 @@ This application is deployed using the following technologies:
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 - [Let's Encrypt](https://letsencrypt.org/) HTTPS/TLS certificates, maintained and updated with [Certbot](https://certbot.eff.org/)
+- [Dynamic DNS](https://support.google.com/domains/answer/6147083?hl=en#zippy=%2Cset-up-a-client-program-on-your-gateway-host-or-server) configured via [ddclient](https://ddclient.net/#installation).

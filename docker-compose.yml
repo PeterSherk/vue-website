@@ -12,16 +12,23 @@ services:
       - ./api/.env
     depends_on:
       - db
+      - redis
     ports:
       - "8000:8000"
   db:
     container_name: website-db
     image: postgres
     restart: always
-    # env_file:
-    #   - postgres.env
     ports:
       - "5433:5432"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ${DATABASE_LOCAL_STORAGE_PATH}:/var/lib/postgresql/data
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    volumes:
+      - ${REDIS_LOCAL_STORAGE_PATH}:/data
+    ports:
+      - "6379:6379"

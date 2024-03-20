@@ -11,6 +11,7 @@ import { createRecipe, getRecipeById, getRecipes } from './service/recipe';
 import { deleteUser } from './service/user';
 import { authPresent, login, register, tokenInvalid, userValidForToken } from './service/auth';
 import { pool } from './db/db';
+import redis from './db/redis';
 
 // Set up Express servers
 const app = express();
@@ -455,9 +456,10 @@ process.on('SIGINT', shutDown);
 async function shutDown() {
   logger.log({
     level: 'info',
-    message: '\nShutting down database connection...'
+    message: '\nShutting down database and redis connection...'
   });
   await pool.end();
+  // await redis.disconnect();
   console.log("Done.");
   process.exit(0);
 }

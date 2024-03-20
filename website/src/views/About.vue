@@ -6,7 +6,7 @@
       </div>
       <div class="column is-6">
         <h1 class="title">Peter Sherk</h1>
-        <h2 class="subtitle">Senior Full-Stack Software Engineer - Fidelity Investments</h2>
+        <h2 class="subtitle">Principal Full-Stack Software Engineer - Fidelity Investments</h2>
         <div class="content">
           <p>
             Coming into college, I had no idea what my future held.
@@ -35,7 +35,7 @@
             and distributed application knowledge. This spurred my love for cloud technology and an appreciation for the operations side of development. Unfortunately, the company itself was not a great fit for me, and I missed the company culture that I had been a part of at Fidelity.
           </p>
           <p>
-            I currently work as a Senior Full-Stack Engineer for <a href="https://www.fidelity.com" target="_blank">Fidelity Investments</a> building the future of portfolio analysis tools.
+            I currently work as a Principal Full-Stack Engineer for <a href="https://www.fidelity.com" target="_blank">Fidelity Investments</a> building the future of AI chatbot and ML tools.
           </p>
           <p>
             In my free time, I love to <strong>travel</strong> and <strong>cook</strong>

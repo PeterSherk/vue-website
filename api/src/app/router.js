@@ -5,13 +5,12 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { logger } from '../configs/logger';
 import { apiPort } from '../configs/config';
-import { currentlyPlaying } from './service/music';
+import { currentlyPlaying, musicWebSocket } from './service/music';
 import { getProjectById, getProjects } from './service/project';
 import { createRecipe, getRecipeById, getRecipes } from './service/recipe';
 import { deleteUser } from './service/user';
 import { authPresent, login, register, tokenInvalid, userValidForToken } from './service/auth';
 import { pool } from './db/db';
-import redis from './db/redis';
 
 // Set up Express servers
 const app = express();
@@ -447,7 +446,18 @@ app.post('/api/v1/register', async (req, res) => {
 
 // Start Node server
 const port = apiPort || 8000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+const server = app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+// Create Websocket for Music data
+server.on('upgrade', (request, socket, head) => {
+  if (request.url === '/music') {
+    musicWebSocket.handleUpgrade(request, socket, head, socket => {
+      musicWebSocket.emit('connection', socket, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
 
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);

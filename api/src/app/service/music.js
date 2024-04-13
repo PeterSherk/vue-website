@@ -6,6 +6,7 @@ import { logger } from '../../configs/logger';
 import { delay } from '../utils';
 
 const musicWebSocket = new WebSocketServer({ noServer: true });
+let previousPlayState;
 
 musicWebSocket.on('connection', async function connection(ws) {
   let keepPollingSpotify = true;
@@ -17,7 +18,6 @@ musicWebSocket.on('connection', async function connection(ws) {
   });
 
   ws.on('pong', (data) => {
-    console.log('pongpong')
     keepPollingSpotify = true;
   });
 
@@ -27,17 +27,24 @@ musicWebSocket.on('connection', async function connection(ws) {
   })
 
   while(keepPollingSpotify) {
-    let response = await currentlyPlaying();
-    if (response.status === 200 && response.data.is_playing) {
-      ws.send(JSON.stringify(response));
-    }
+    await sendPlayStatus(ws);
     await delay(5000);
     ws.ping();
   }
 });
 
+async function sendPlayStatus(websocket) {
+  let response = await currentlyPlaying();
+  if (previousPlayState?.data?.is_playing && (response.status === 204 || !response.data.is_playing)) {
+    previousPlayState = response;
+    websocket.send(JSON.stringify(response))
+  } else if (response.status === 200 && response.data.is_playing) {
+    previousPlayState = response;
+    websocket.send(JSON.stringify(response));
+  }
+}
+
 export async function currentlyPlaying() {
-  console.log('currentlyplaying')
   let currentlyPlaying = {};
   let access_token;
   let options;
@@ -48,7 +55,7 @@ export async function currentlyPlaying() {
         'Authorization': `Bearer ${access_token}`
       }
     };
-    let resp = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', options);
+    let resp = await axios.get('https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode', options);
     currentlyPlaying.data = resp.data;
     currentlyPlaying.status = resp.status;
   } catch(error) {

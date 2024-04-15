@@ -3,6 +3,7 @@
         <div class="level-left">
             <div class="level-item">
                 <font-awesome-icon :icon="['fas', icon]" size="3x" />
+                <!-- <h1 class="title">{{tileTitle}}</h1> -->
             </div>
             <div class="level-item">
                 <h1 class="title">{{tileTitle}}</h1>

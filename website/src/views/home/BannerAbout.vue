@@ -1,7 +1,6 @@
 <template>
   <div id="app-bannerabout">
-    <div class="bannerabout__bio-border"></div>
-    <section class="section" style="background-color: #F8F8F8">
+    <section class="section">
       <div class="container">
         <div class="level">
           <div class="level-item has-text-centered">
@@ -10,7 +9,7 @@
           <div class="level-item has-text-centered">
             <div class="content">
               <p class="title">Peter Sherk</p>
-              <p style="font-size: 1.2em;">
+              <p class="is-size-5">
                 Full-Stack Developer out of Raleigh, North Carolina.
               </p>
               <p class="subtitle">
@@ -35,7 +34,6 @@
         </div>
       </div>
     </section>
-    <div class="bannerabout__bio-border" style="margin-bottom: 4em;"></div>
   </div>
 </template>
 
@@ -67,10 +65,5 @@ export default {
     height:320px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 10px;
-  }
-
-  .bannerabout__bio-border {
-    background-color: #35db3a;
-    height: 2px;
   }
 </style>

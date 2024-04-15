@@ -1,8 +1,6 @@
 <template>
-  <div class="app-home">
-    <Banner/>
-    <BannerAbout/>
-  </div>
+  <Banner/>
+  <BannerAbout/>
 </template>
 
 <script>

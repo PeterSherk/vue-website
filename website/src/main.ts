@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
-import 'bulma/css/bulma.css'
+import 'bulma/css/bulma.min.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faLaptopCode, faCookieBite, faCompactDisc, faToolbox,

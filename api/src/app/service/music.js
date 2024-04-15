@@ -35,13 +35,33 @@ musicWebSocket.on('connection', async function connection(ws) {
 
 async function sendPlayStatus(websocket) {
   let response = await currentlyPlaying();
-  if (previousPlayState?.data?.is_playing && (response.status === 204 || !response.data.is_playing)) {
+  if (previousPlayState?.data?.is_playing && (response.status === 204 || !response.data?.is_playing)) {
     previousPlayState = response;
-    websocket.send(JSON.stringify(response))
-  } else if (response.status === 200 && response.data.is_playing) {
+    websocket.send(JSON.stringify({isPlaying: false}))
+  } else if (response.status === 200 && response.data?.is_playing) {
     previousPlayState = response;
-    websocket.send(JSON.stringify(response));
+    websocket.send(JSON.stringify(buildCurrentlyPlaying(response.data)));
   }
+}
+
+function buildCurrentlyPlaying(currentlyPlaying) {
+  let item = {
+    description: currentlyPlaying.item.description,
+    name: currentlyPlaying.item.name,
+    progress: currentlyPlaying.progress_ms,
+    duration: currentlyPlaying.item.duration_ms,
+    externalUrl: currentlyPlaying.item.external_urls.spotify,
+    isPlaying: currentlyPlaying.is_playing,
+    images: currentlyPlaying.item.images
+  };
+
+  if (currentlyPlaying.currently_playing_type === 'track') {
+    item.creator = currentlyPlaying.item.artists.map(artist => artist.name).join();
+  } else {
+    item.creator = currentlyPlaying.item.show.publisher;
+  }
+
+  return item;
 }
 
 export async function currentlyPlaying() {

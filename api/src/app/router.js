@@ -5,7 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { logger } from '../configs/logger';
 import { apiPort } from '../configs/config';
-import { currentlyPlaying, musicWebSocket } from './service/music';
+import { musicWebSocket } from './service/music';
 import { getProjectById, getProjects } from './service/project';
 import { createRecipe, getRecipeById, getRecipes } from './service/recipe';
 import { deleteUser } from './service/user';
@@ -272,11 +272,6 @@ app.get('/api/v1/projects/:projectId', async (req ,res)=> {
   }
 });
 
-app.get('/api/v1/music/currently-playing', async (req ,res)=> {
-  let response = await currentlyPlaying();
-  return res.status(response.status).send(response.data);
-});
-
 /**
  * @openapi
  *  /users/{username}:
@@ -446,7 +441,10 @@ app.post('/api/v1/register', async (req, res) => {
 
 // Start Node server
 const port = apiPort || 8000;
-const server = app.listen(port, () => console.log(`Listening on port ${port}...`));
+const server = app.listen(port, () => logger.log({
+  level: 'info',
+  message: `Listening on port ${port}...`
+}));
 
 // Create Websocket for Music data
 server.on('upgrade', (request, socket, head) => {
@@ -470,7 +468,10 @@ async function shutDown() {
   });
   await pool.end();
   // await redis.disconnect();
-  console.log("Done.");
+  logger.log({
+    level: 'info',
+    message: 'Items disconnected.'
+  });
   process.exit(0);
 }
 

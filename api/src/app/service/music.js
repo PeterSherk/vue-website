@@ -14,7 +14,7 @@ musicWebSocket.on('connection', async function connection(ws) {
     logger.log({
       level: 'error',
       message: `Error with websocket: ${error}`
-    })
+    });
   });
 
   ws.on('pong', (data) => {
@@ -22,7 +22,10 @@ musicWebSocket.on('connection', async function connection(ws) {
   });
 
   ws.on('close', () => {
-    console.log('close')
+    logger.log({
+      level: 'debug',
+      message: `Closing websocket...`
+    });
     keepPollingSpotify = false;
   })
 
@@ -51,14 +54,15 @@ function buildCurrentlyPlaying(currentlyPlaying) {
     progress: currentlyPlaying.progress_ms,
     duration: currentlyPlaying.item.duration_ms,
     externalUrl: currentlyPlaying.item.external_urls.spotify,
-    isPlaying: currentlyPlaying.is_playing,
-    images: currentlyPlaying.item.images
+    isPlaying: currentlyPlaying.is_playing
   };
 
   if (currentlyPlaying.currently_playing_type === 'track') {
     item.creator = currentlyPlaying.item.artists.map(artist => artist.name).join();
+    item.images = currentlyPlaying.item.album.images
   } else {
     item.creator = currentlyPlaying.item.show.publisher;
+    item.images = currentlyPlaying.item.images
   }
 
   return item;
@@ -102,7 +106,7 @@ async function getToken() {
   await redis.connect();
   token = await redis.get('access_token');
   if (!token) {
-    token = await getNewAccessToken()
+    token = await getNewAccessToken();
     await redis.set('access_token', token);
   }
   await redis.disconnect();
@@ -128,14 +132,15 @@ async function getNewAccessToken() {
       grant_type: 'refresh_token',
       refresh_token: process.env.SPOTIFY_REFRESH_TOKEN
     })
-  }
+  };
   try {
     let response = await axios.request(newTokenRequestOptions);
     return response.data.access_token;
   } catch (error) {
-    console.log(error.request._header)
-    console.log(error.response.status)
-    console.log(error.response.data)
+    logger.log({
+      level: 'error',
+      message: `Error getting access token: ${error}`
+    });
   }
 }
 

@@ -3,11 +3,14 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpecs from './openapi/swagger';
 import cors from 'cors';
 import helmet from 'helmet';
-import { sign, verify } from 'jsonwebtoken';
-import { compare, hash as _hash } from 'bcryptjs';
-import { Pool } from 'pg';
 import { logger } from '../configs/logger';
-import { user, host, database, password, dbPort, jwtSecret, saltRounds, apiPort} from '../configs/config';
+import { apiPort } from '../configs/config';
+import { musicWebSocket } from './service/music';
+import { getProjectById, getProjects } from './service/project';
+import { createRecipe, getRecipeById, getRecipes } from './service/recipe';
+import { deleteUser } from './service/user';
+import { authPresent, login, register, tokenInvalid, userValidForToken } from './service/auth';
+import { pool } from './db/db';
 
 // Set up Express servers
 const app = express();
@@ -24,15 +27,6 @@ var options = {
   }
 };
 app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, options));
-
-// Create DB connection pool
-const pool = new Pool({
-  user: user,
-  host: host,
-  database: database,
-  password: password,
-  port: dbPort,
-});
 
 // Define tags for Swagger
 
@@ -76,57 +70,6 @@ const pool = new Pool({
 
 /**
  * @openapi
- *  /projects:
- *    get:
- *      summary: Get a list of projects
- *      tags: [Projects]
- *      parameters:
- *       - in: query
- *         name: filter
- *         schema:
- *           type: string
- *      responses:
- *        "200":
- *          description: A list of projects
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Project'
- *        "500":
- *          description: Generic error occurred
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/responses/ErrorMessage'
- */
-app.get('/api/v1/projects', (req ,getRes)=> {
-  let fields = '*'
-  let filter = req.query.filter
-  if (filter && filter.toLowerCase() == 'overview') {
-    fields = 'id, company, name, year'
-  }
-
-  pool.query(`SELECT ${fields} FROM website.project`, (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return getRes.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      return getRes.send(qRes.rows);
-    }
-  });
-});
-
-/**
- * @openapi
  *  /recipes:
  *    post:
  *      summary: Create a recipe
@@ -160,36 +103,16 @@ app.get('/api/v1/projects', (req ,getRes)=> {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.post('/api/v1/recipes', (req, res) => {
+app.post('/api/v1/recipes', async (req, res) => {
   if (tokenInvalid(req)){
     return res.status(401).send({
       message: 'Authorization failed.'
     });
   }
 
-  const body = req.body;
-  pool.query(`INSERT INTO website.recipes(display_name, website_url, description, picture_url, steps, ingredients, date_ate)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [body.displayName, body.websiteUrl, body.description, body.pictureUrl, body.steps,
-        body.ingredients, body.dateAte],
-      (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return res.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      return res.status(201).send({
-        message: `Recipe created.`
-      });
-    }
+  const response = await createRecipe(req);
+  return res.status(response.status).json({
+    message: response.message
   });
 });
 
@@ -213,24 +136,15 @@ app.post('/api/v1/recipes', (req, res) => {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.get('/api/v1/recipes', (req ,getRes)=> {
-  pool.query(`SELECT * FROM website.recipes`, (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return getRes.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      return getRes.send(qRes.rows);
-    }
-  });
+app.get('/api/v1/recipes', async (req ,res)=> {
+  const response = await getRecipes(req);
+  if (response.status === 400 || response.status === 500) {
+    return res.status(response.status).json({
+      message: response.message
+    });
+  } else {
+    return res.status(response.status).send(response.data);
+  }
 });
 
 /**
@@ -263,39 +177,51 @@ app.get('/api/v1/recipes', (req ,getRes)=> {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
- app.get('/api/v1/recipes/:recipeId', (req ,getRes)=> {
-  const recipeId = req.params.recipeId
-  if (isNaN(recipeId) && isNaN(parseFloat(recipeId))) {
-    logger.log({
-      level: 'info',
-      message: `${req.method} request to ${req.url} is a 400. Bad recipe ID: ${recipeId}`
+ app.get('/api/v1/recipes/:recipeId', async (req, res)=> {
+  const response = await getRecipeById(req);
+  if (response.status === 400 || response.status === 500) {
+    return res.status(response.status).json({
+      message: response.message
     });
-    return getRes.status(400).json({
-      message: 'Recipe ID must be a number.'
-    })
+  } else {
+    return res.status(response.status).send(response.data);
   }
+});
 
-  pool.query(`SELECT * FROM website.recipes WHERE id=${recipeId}`, (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return getRes.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      if (qRes.rows[0]) {
-        return getRes.send(qRes.rows[0]);
-      } else {
-        return getRes.status(204).send({});
-      }
-    }
-  });
+/**
+ * @openapi
+ *  /projects:
+ *    get:
+ *      summary: Get a list of projects
+ *      tags: [Projects]
+ *      parameters:
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
+ *      responses:
+ *        "200":
+ *          description: A list of projects
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Project'
+ *        "500":
+ *          description: Generic error occurred
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/responses/ErrorMessage'
+ */
+app.get('/api/v1/projects', async (req ,res)=> {
+  const response = await getProjects(req);
+  if (response.status === 400 || response.status === 500) {
+    return res.status(response.status).json({
+      message: response.message
+    });
+  } else {
+    return res.status(response.status).send(response.data);
+  }
 });
 
 /**
@@ -334,40 +260,16 @@ app.get('/api/v1/recipes', (req ,getRes)=> {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
-
+app.get('/api/v1/projects/:projectId', async (req ,res)=> {
   const projectId = req.params.projectId
-  if (isNaN(projectId) && isNaN(parseFloat(projectId))) {
-    logger.log({
-      level: 'info',
-      message: `${req.method} request to ${req.url} is a 400. Bad project ID: ${projectId}`
+  const response = await getProjectById(projectId, req);
+  if (response.status === 400 || response.status === 500) {
+    return res.status(response.status).json({
+      message: response.message
     });
-    return getRes.status(400).json({
-      message: 'Project ID must be a number.'
-    })
+  } else {
+    return res.status(response.status).send(response.data);
   }
-
-  pool.query(`SELECT * FROM website.project WHERE id=${projectId}`, (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return getRes.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      if (qRes.rows[0]) {
-        return getRes.send(qRes.rows[0]);
-      } else {
-        return getRes.status(204).send({});
-      }
-    }
-  });
 });
 
 /**
@@ -406,44 +308,16 @@ app.get('/api/v1/projects/:projectId', (req ,getRes)=> {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.delete('/api/v1/users/:username', (req, res) => {
+app.delete('/api/v1/users/:username', async (req, res) => {
   if (tokenInvalid(req) || !userValidForToken(req, req.params.username)){
     return res.status(401).send({
       message: 'Authorization failed.'
     });
   }
 
-  const un = req.params.username;
-  pool.query('DELETE FROM website.login WHERE username=$1', [un], (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed.\n
-        Error: ${err}`
-      });
-      return res.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} successful.`
-      });
-      const rowsDeleted = qRes.rowCount;
-      logger.log({
-        level: 'info',
-        message: `${rowsDeleted} records deleted from database.'`
-      });
-      if (rowsDeleted != 0) {
-        return res.send({
-          message: `User ${un} deleted.`
-        });
-      } else {
-        return res.send({
-          message: `User doesn't exist.`
-        });
-      }
-    }
+  const response = await deleteUser(req);
+  return res.status(response.status).send({
+    message: response.message
   });
 });
 
@@ -480,59 +354,22 @@ app.delete('/api/v1/users/:username', (req, res) => {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.post('/api/v1/login', (req, res) => {
+app.post('/api/v1/login', async (req, res) => {
   if (!authPresent(req, 'Basic')) {
     return res.status(401).send({
       message: 'Authorization failed.'
     });
   }
-
-  const unpw = Buffer.from(req.header('Authorization').replace('Basic', '').trim(), 'base64').toString('binary').split(':')
-  const un = unpw[0]
-  const plainPW = unpw[1]
-  pool.query('SELECT * FROM website.login WHERE username=$1', [un], (err, qRes) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed.\n
-        Error: ${err}`
-      });
-      return res.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else if (qRes.rowCount == 0) {
-      logger.log({
-        level: 'info',
-        message: `${req.method} request to ${req.url} failed. Username or password incorrect`
-      });
-      return res.status(401).send({
-        message: 'Username or password is incorrect'
-      });
-    } else {
-      const hashPass = qRes.rows[0].password
-      compare(plainPW, hashPass, (hashErr, hashRes) => {
-        if (hashErr || !hashRes) {
-          logger.log({
-            level: 'info',
-            message: `${req.method} request to ${req.url} failed. Username or password incorrect
-            Error: ${hashErr}`
-          });
-          return res.status(401).send({
-            message: 'Username or password is incorrect'
-          });
-        } else {
-          logger.log({
-            level: 'info',
-            message: `${req.method} request to ${req.url} successful.`
-          });
-          const token = sign({ user: un }, jwtSecret, { expiresIn: '1h' });
-          return res.send({
-            token: token
-          });
-        }
-      });
-    }
-  });
+  const response = await login(req);
+  if (response.status === 200) {
+    return res.status(response.status).send({
+      token: response.token
+    });
+  } else {
+    return res.status(response.status).send({
+      message: response.message
+    });
+  }
 });
 
 /**
@@ -590,98 +427,35 @@ app.post('/api/v1/login', (req, res) => {
  *              schema:
  *                $ref: '#/components/responses/ErrorMessage'
  */
-app.post('/api/v1/register', (req, res) => {
+app.post('/api/v1/register', async (req, res) => {
   if (tokenInvalid(req)){
     return res.status(401).send({
       message: 'Authorization failed.'
     });
   }
-
-  const un = req.header('username').trim();
-  const plainPW = req.header('password').trim();
-  if(!un || !plainPW) {
-    return res.status(400).send({
-      message: 'Username and password required.'
-    });
-  }
-
-  _hash(plainPW, saltRounds, (err, hash) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed.
-        Error: ${err}`
-      });
-      return res.status(500).send({
-        message: 'Error occurred.'
-      });
-    } else {
-      pool.query('INSERT INTO website.login VALUES($1, $2)', [un, hash], (qErr, qRes) => {
-        if (qErr) {
-          logger.log({
-            level: 'error',
-            message: `${req.method} request to ${req.url} failed.
-            Error: ${qErr}`
-          });
-          if (qErr.code == 23505) {
-            return res.status(500).send({
-              message: 'Username already exists.'
-            });
-          } else {
-            return res.status(500).send({
-              message: 'Error occurred.'
-            });
-          }
-        } else {
-          logger.log({
-            level: 'info',
-            message: `${req.method} request to ${req.url} successful.`
-          });
-          return res.send({
-            message: `User ${un} registered.`
-          });
-        }
-      });
-    }
+  const response = await register(req);
+  return res.status(response.status).send({
+    message: response.message
   });
 });
 
-function tokenInvalid(req) {
-  if (!authPresent(req, 'Bearer')) {
-    logger.log({
-      level: 'info',
-      message: `${req.method} request to ${req.url} failed. Error: No Bearer token present`
-    });
-    return true;
-  } else {
-    const token = req.header('Authorization').replace('Bearer', '').trim()
-    try {
-      verify(token, jwtSecret);
-    } catch (err) {
-      logger.log({
-        level: 'error',
-        message: `${req.method} request to ${req.url} failed. Error: ${err}`
-      });
-      return true;
-    }
-  }
-  return false;
-}
-
-function userValidForToken(req, username) {
-  const token = req.header('Authorization').replace('Bearer', '').trim();
-  const decoded = verify(token, jwtSecret);
-  return decoded.user == username;
-}
-
-function authPresent(req, type) {
-  return req.header('Authorization') && req.header('Authorization').includes(type)
-    && req.header('Authorization').replace(type, '').trim() != ''
-}
-
 // Start Node server
 const port = apiPort || 8000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+const server = app.listen(port, () => logger.log({
+  level: 'info',
+  message: `Listening on port ${port}...`
+}));
+
+// Create Websocket for Music data
+server.on('upgrade', (request, socket, head) => {
+  if (request.url === '/music') {
+    musicWebSocket.handleUpgrade(request, socket, head, socket => {
+      musicWebSocket.emit('connection', socket, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
 
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);
@@ -690,10 +464,14 @@ process.on('SIGINT', shutDown);
 async function shutDown() {
   logger.log({
     level: 'info',
-    message: '\nShutting down database connection...'
+    message: '\nShutting down database and redis connection...'
   });
   await pool.end();
-  console.log("Done.");
+  // await redis.disconnect();
+  logger.log({
+    level: 'info',
+    message: 'Items disconnected.'
+  });
   process.exit(0);
 }
 

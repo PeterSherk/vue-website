@@ -20,7 +20,7 @@
                 </router-link>
               </p>
               <div style="justify-content: center" class="buttons">
-                <button class="button is-rounded" @click="openLink('mailto:psherk95@gmail.com')">
+                <button class="button is-rounded" @click="openLink('mailto:psherk95@gmail.com', false)">
                   <font-awesome-icon :icon="['far', 'envelope']" />
                 </button>
                 <button class="button is-rounded" @click="openLink('https://www.linkedin.com/in/peter-sherk', true)">

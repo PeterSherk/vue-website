@@ -33,7 +33,7 @@
         <p>
           Created by Peter Sherk using <a href="https://bulma.io">Bulma</a>,
           <a href="https://vuejs.org/">Vue</a> and
-          <a href="https://aws.amazon.com/">AWS</a>. &copy; 2020
+          <a href="https://www.raspberrypi.com/">RaspberryPi</a>. &copy; 2024
         </p>
       </div>
     </footer>

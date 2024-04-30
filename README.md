@@ -12,7 +12,7 @@ This applications information is saved in a Postgres database, which is deployed
 
 ## Deployment
 This application is deployed using the following technologies:
-- 32-bit Raspbian OS on a 8GB [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
+- 64-bit Raspbian OS on a 8GB [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
 - [NGINX](https://www.nginx.com/) webserver
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)

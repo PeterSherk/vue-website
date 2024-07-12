@@ -76,7 +76,6 @@ export default {
 				this.loading = false
 			})
 	},
-
 	data() {
 		return {
 			projects: [] as Project[],

@@ -71,7 +71,6 @@ export default {
 	created() {
 		this.pathId = +this.$route.params.projectId
 	},
-
 	mounted() {
 		const projectService = new ProjectService()
 		projectService
@@ -87,13 +86,11 @@ export default {
 				this.loading = false
 			})
 	},
-
 	methods: {
 		descrSize(image: string): string {
 			return image ? 'is-4' : 'is-full'
 		}
 	},
-
 	data() {
 		return {
 			pathId: undefined as number | undefined,

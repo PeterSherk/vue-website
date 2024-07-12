@@ -26,8 +26,6 @@ export default {
 		icon: {
 			default: 'exclamation-triangle'
 		}
-		// tileTitle = 'Default Title' as string,
-		// icon = 'exclamation-triangle' as string,
 	}
 }
 </script>

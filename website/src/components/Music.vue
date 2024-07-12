@@ -51,24 +51,21 @@ import { type Media } from '@/assets/models/project'
 export default {
 	name: 'app-music',
 	mounted(): void {
-		this.musicStream = new WebSocket('wss://api.petersherk.com/music')
+		this.musicStream = new WebSocket(`${import.meta.env.VITE_APP_WS_HOST}/music`)
 		this.musicStream.onmessage = (event) => {
 			const message = JSON.parse(event.data)
 			this.currentlyStreaming = message
 		}
 	},
-
 	unmounted(): void {
 		this.musicStream?.close()
 	},
-
 	data() {
 		return {
 			currentlyStreaming: null as Media | null,
 			musicStream: null as WebSocket | null
 		}
 	},
-
 	methods: {
 		openLink(link: string, newTab: boolean) {
 			window.open(link, newTab ? '_blank' : '_parent')

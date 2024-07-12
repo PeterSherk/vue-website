@@ -1,7 +1,7 @@
 .grow__box {
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
-.grow__box:hover{
+.grow__box:hover {
   cursor: pointer;
   transform: scale(1.1);
 }

@@ -1,7 +1,6 @@
 <template>
     <div>
         <section class="hero is-fullheight-with-navbar">
-            <!-- Hero content: will be in the middle -->
             <div class="hero-body">
                 <div class="container">
                     <div class="columns">
@@ -14,22 +13,16 @@
                             </h2>
                         </div>
                         <div class="column is-5 is-narrow-tablet is-narrow-mobile">
-                            <div class="tile is-ancestor">
-                                <div class="tile is-vertical is-parent">
-                                    <router-link to="coding" class="tile is-child">
-                                        <div class="box grow__box">
-                                            <IconTile tileTitle="Coding" icon="laptop-code"/>
-                                        </div>
+                            <div class="grid">
+                                <div class="cell">
+                                    <router-link to="coding" class="box grow__box">
+                                        <IconTile tileTitle="Coding" icon="laptop-code"/>
                                     </router-link>
-                                    <router-link to="cooking" class="tile is-child">
-                                        <div class=" box grow__box">
-                                            <IconTile tileTitle="Cooking" icon="cookie-bite"/>
-                                        </div>
+                                    <router-link to="cooking" class="box grow__box">
+                                        <IconTile tileTitle="Cooking" icon="cookie-bite"/>
                                     </router-link>
-                                    <router-link to="music" class="tile is-child">
-                                        <div class="box grow__box">
-                                            <IconTile tileTitle="Music" icon="compact-disc"/>
-                                        </div>
+                                    <router-link to="music" class="box grow__box">
+                                        <IconTile tileTitle="Music" icon="compact-disc"/>
                                     </router-link>
                                 </div>
                             </div>

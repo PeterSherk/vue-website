@@ -1,7 +1,6 @@
 <template>
   <div id="app-bannerabout">
-    <div class="bannerabout__bio-border"></div>
-    <section class="section" style="background-color: #F8F8F8">
+    <section class="section mb-6">
       <div class="container">
         <div class="level">
           <div class="level-item has-text-centered">
@@ -10,7 +9,7 @@
           <div class="level-item has-text-centered">
             <div class="content">
               <p class="title">Peter Sherk</p>
-              <p style="font-size: 1.2em;">
+              <p class="subtitle">
                 Full-Stack Developer out of Raleigh, North Carolina.
               </p>
               <p class="subtitle">
@@ -19,7 +18,7 @@
                   <font-awesome-icon id="bannerabout__subtitle-button__icon" style="margin-left: 8px;" :icon="['fas', 'chevron-right']" />
                 </router-link>
               </p>
-              <div style="justify-content: center" class="buttons">
+              <div class="buttons is-centered">
                 <button class="button is-rounded" @click="openLink('mailto:psherk95@gmail.com', false)">
                   <font-awesome-icon :icon="['far', 'envelope']" />
                 </button>
@@ -35,7 +34,6 @@
         </div>
       </div>
     </section>
-    <div class="bannerabout__bio-border" style="margin-bottom: 4em;"></div>
   </div>
 </template>
 
@@ -67,10 +65,5 @@ export default {
     height:320px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 10px;
-  }
-
-  .bannerabout__bio-border {
-    background-color: #35db3a;
-    height: 2px;
   }
 </style>

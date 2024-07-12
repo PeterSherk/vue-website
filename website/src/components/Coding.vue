@@ -62,7 +62,7 @@ export default class Coding extends Vue {
   private projectService: ProjectService = new ProjectService()
   loading: boolean | undefined
   errored: boolean | undefined
-  private error: AxiosError<any> | undefined
+  private error: AxiosError | undefined
 
   mounted () {
     this.projectService.getProjects('overview')

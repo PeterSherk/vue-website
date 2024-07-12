@@ -15,14 +15,14 @@
                         <div class="column is-5 is-narrow-tablet is-narrow-mobile">
                             <div class="grid">
                                 <div class="cell">
+                                    <router-link to="music" class="box grow__box">
+                                        <IconTile tileTitle="Music" icon="compact-disc"/>
+                                    </router-link>
                                     <router-link to="coding" class="box grow__box">
                                         <IconTile tileTitle="Coding" icon="laptop-code"/>
                                     </router-link>
                                     <router-link to="cooking" class="box grow__box">
                                         <IconTile tileTitle="Cooking" icon="cookie-bite"/>
-                                    </router-link>
-                                    <router-link to="music" class="box grow__box">
-                                        <IconTile tileTitle="Music" icon="compact-disc"/>
                                     </router-link>
                                 </div>
                             </div>

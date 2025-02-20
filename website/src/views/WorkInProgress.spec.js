@@ -7,10 +7,10 @@ test('Loader spinner is present', async () => {
   const workInProgressWrapper = mount(WorkInProgress,
     {
       global: {
-      stubs: {
-        FontAwesomeIcon: true
+        stubs: {
+          FontAwesomeIcon: true
+        }
       }
-    }
     }
   );
   const title = workInProgressWrapper.find('.title').text();

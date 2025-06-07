@@ -62,7 +62,7 @@ export default {
 		Loader
 	},
 	mounted() {
-		const projectService = new ProjectService;
+		const projectService = new ProjectService()
 		projectService
 			.getProjects('overview')
 			.then((response: AxiosResponse<Project[]>) => {

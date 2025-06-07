@@ -10,7 +10,7 @@ export default mergeConfig(
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
-        exclude: [...coverageConfigDefaults.exclude, 'mock/**']
+        exclude: [...coverageConfigDefaults.exclude, 'mock/**', 'src/assets/models']
       },
       setupFiles: ['vitest.setup.ts']
     }

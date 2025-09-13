@@ -24,6 +24,13 @@ describe('Coding.vue tests', () => {
 		})
 	})
 
+	test('renders the loader', async () => {
+		await codingWrapper.vm.$nextTick()
+		await codingWrapper.setData({ loading: true })
+		await codingWrapper.vm.$nextTick()
+		expect(codingWrapper.findComponent(Loader).exists()).toBe(true)
+	});
+
 	test('displays error message when API call fails', async () => {
 		await codingWrapper.setData({ errored: true, loading: false })
 		await codingWrapper.vm.$nextTick()
@@ -40,5 +47,13 @@ describe('Coding.vue tests', () => {
 		expect(codingWrapper.findAll('.card').length).toBe(2)
 		expect(codingWrapper.text()).toContain('Project A')
 		expect(codingWrapper.text()).toContain('Project B')
+	})
+
+	test('displays no projects when no projects returned', async () => {
+		const projects: any = []
+		await codingWrapper.setData({ projects, loading: false })
+		await codingWrapper.vm.$nextTick()
+		expect(codingWrapper.find('h1.title.is-4').text()).toBe('No projects available.')
+
 	})
 })

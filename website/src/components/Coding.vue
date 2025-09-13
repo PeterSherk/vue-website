@@ -62,19 +62,7 @@ export default {
 		Loader
 	},
 	mounted() {
-		const projectService = new ProjectService()
-		projectService
-			.getProjects('overview')
-			.then((response: AxiosResponse<Project[]>) => {
-				this.projects = response.data
-			})
-			.catch((error: AxiosError) => {
-				this.error = error
-				this.errored = true
-			})
-			.finally(() => {
-				this.loading = false
-			})
+		this.getProjects()
 	},
 	data() {
 		return {
@@ -83,12 +71,29 @@ export default {
 			error: undefined as AxiosError | undefined,
 			loading: true as boolean
 		}
+	},
+	methods: {
+		getProjects() {
+			const projectService = new ProjectService()
+			projectService
+				.getProjects('overview')
+				.then((response: AxiosResponse<Project[]>) => {
+					this.projects = response.data
+				})
+				.catch((error: AxiosError) => {
+					this.error = error
+					this.errored = true
+				})
+				.finally(() => {
+					this.loading = false
+				})
+		}
 	}
 }
 </script>
 
 <style lang="scss">
-.coding__box {
-	min-height: 240px;
-}
+	.coding__box {
+		min-height: 240px;
+	}
 </style>

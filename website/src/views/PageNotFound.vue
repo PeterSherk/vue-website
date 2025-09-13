@@ -1,6 +1,6 @@
 <template>
-	<meta name="robots" content="noindex" />
 	<!-- Blocks indexing on most webcrawlers like Google -->
+	<meta name="robots" content="noindex" />
 	<GenericError
 		errorMessage="Oops! Page Not Found."
 		errorPicturePath="https://api.petersherk.com/img/moose_404.jpeg"

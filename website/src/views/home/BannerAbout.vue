@@ -31,18 +31,21 @@
 							</p>
 							<div class="buttons is-centered">
 								<button
+									aria-label="Click to send email to Peter"
 									class="button is-rounded"
 									@click="openLink('mailto:psherk95@gmail.com', false)"
 								>
 									<font-awesome-icon :icon="['far', 'envelope']" />
 								</button>
 								<button
+									aria-label="Click to see Peter's LinkedIn Profile"
 									class="button is-rounded"
 									@click="openLink('https://www.linkedin.com/in/peter-sherk', true)"
 								>
 									<font-awesome-icon :icon="['fab', 'linkedin']" />
 								</button>
 								<button
+									aria-label="Click to see Peter's GitHub"
 									class="button is-rounded"
 									@click="openLink('https://github.com/PeterSherk', true)"
 								>

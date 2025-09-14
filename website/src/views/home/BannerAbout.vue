@@ -13,7 +13,7 @@
 					<div class="level-item has-text-centered">
 						<div class="content">
 							<p class="title">Peter Sherk</p>
-							<p class="subtitle">Full-Stack Developer out of Raleigh, North Carolina.</p>
+							<p class="subtitle">Full-Stack Developer out of North Stonington, Connecticut.</p>
 							<p class="subtitle">
 								<router-link
 									id="bannerabout__subtitle-button"

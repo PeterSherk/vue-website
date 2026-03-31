@@ -22,6 +22,8 @@ services:
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ${DATABASE_LOCAL_STORAGE_PATH}:/var/lib/postgresql/data
+    env_file:
+      - .env
   redis:
     container_name: redis
     image: redis

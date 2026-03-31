@@ -1,4 +1,4 @@
-FROM node:lts as builder
+FROM node:24 AS builder
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 RUN npm ci --production
 
-FROM node:lts as runner
+FROM node:24-alpine AS runner
 
 WORKDIR /usr/src/app
 

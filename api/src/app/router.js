@@ -467,7 +467,7 @@ async function shutDown() {
     message: '\nShutting down database and redis connection...'
   });
   await pool.end();
-  // await redis.disconnect();
+  // await redis.close();
   logger.log({
     level: 'info',
     message: 'Items disconnected.'

@@ -87,12 +87,14 @@ export async function currentlyPlaying() {
       access_token = await getNewAccessToken();
       await redis.connect();
       await redis.set('access_token', access_token);
-      await redis.disconnect();
+      await redis.close();
       options = {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
       };
+    } else {
+      throw error;
     }
     let resp = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', options);
     currentlyPlaying.data = resp.data;
@@ -104,13 +106,16 @@ export async function currentlyPlaying() {
 async function getToken() {
   let token;
   await redis.connect();
-  token = await redis.get('access_token');
-  if (!token) {
-    token = await getNewAccessToken();
-    await redis.set('access_token', token);
+  try {
+    token = await redis.get('access_token');
+    if (!token) {
+      token = await getNewAccessToken();
+      await redis.set('access_token', token);
+    }
+    return token;
+  } finally {
+    await redis.close();
   }
-  await redis.disconnect();
-  return token;
 }
 
 async function getNewAccessToken() {
@@ -141,6 +146,7 @@ async function getNewAccessToken() {
       level: 'error',
       message: `Error getting access token: ${error}`
     });
+    throw new Error('Unable to get Spotify access token', { cause: error });
   }
 }
 
